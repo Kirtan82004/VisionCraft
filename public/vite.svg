@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+  <!-- Background Color (Dark Blue for Sophistication) -->
+  <rect x="0" y="0" width="800" height="400" fill="#001f3d" />
+
+  <!-- Outer Triangle (Representing Vision/Focus) -->
+  <polygon points="400,80 240,320 560,320" fill="#1E90FF" opacity="0.8" />
+
+  <!-- Inner Circle (Lens) -->
+  <circle cx="400" cy="200" r="120" fill="#00BFFF" opacity="0.6" />
+
+  <!-- Inner Triangle (Sharp Focus) -->
+  <polygon points="400,140 320,280 480,280" fill="white" opacity="0.9" />
+
+  <!-- Reflection Circle on Lens -->
+  <circle cx="460" cy="160" r="24" fill="white" opacity="0.4" />
+
+  <!-- Text - Brand Name -->
+  <text x="180" y="360" font-family="Arial, sans-serif" font-size="56" font-weight="bold" fill="white">VisionSharp</text>
+  <text x="230" y="390" font-family="Arial, sans-serif" font-size="32" fill="white">Clarity in Every Look</text>
+</svg>
