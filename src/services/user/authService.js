@@ -24,18 +24,9 @@ const registerUser = async (formData) => {
 
 const loginUser = async (formData) => {
     try {
-        const res = await axios.post(`${API_URL}/users/login`, formData,{withCredentials:true});
-       const loginUser = async (formData) => {
-    try {
-        const res = await axios.post(`${API_URL}/users/login`, formData,{withCredentials:true});
-       
-           window.alert("Login successful!");
-    } catch (error) {
-        const msg = error.response?.data?.message || "Login failed!";
-        window.alert(msg);
-        return { success: false, message: msg };
-    }
-};
+        const res = await axios.post(`${API_URL}/users/login`, formData, { withCredentials: true });
+        window.alert("Login successful!");
+        return res.data; // return login response data
     } catch (error) {
         const msg = error.response?.data?.message || "Login failed!";
         window.alert(msg);
