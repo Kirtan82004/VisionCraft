@@ -1,3 +1,4 @@
+
 import React from "react";
 
 const Button = ({ 
@@ -18,5 +19,4 @@ const Button = ({
         </button>
     );
 }
-
-export default Button;  
+export default  Button;

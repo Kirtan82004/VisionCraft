@@ -1,3 +1,4 @@
+
 import React from "react";
 import aboutImage from "../assets/about.jpg";
 import CEO from "../assets/CEO.jpg";

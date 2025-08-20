@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Signup ,Container} from '../components/index.js'
 
@@ -11,4 +12,4 @@ const SignUpPage = ()=>{
     )
 }
 
-export default SignUpPage;
+export default SignUpPage;  

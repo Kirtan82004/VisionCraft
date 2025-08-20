@@ -1,3 +1,4 @@
+
 // src/slices/appointmentSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 

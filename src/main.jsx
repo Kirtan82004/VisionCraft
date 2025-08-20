@@ -11,6 +11,7 @@ import SignUp from './pages/SignUpPage.jsx';
 import Login from "./pages/LoginPage.jsx"
 import Product from "./pages/ProductListingPage.jsx"
 import ProductDetail from "./pages/ProductDetailPage.jsx"
+import OrderDetails from './pages/OrderDetails.jsx';
 import Cart from "./pages/user/CartPage.jsx"
 import Profile from "./pages/user/UserProfile.jsx"
 import EditProfilePage from './pages/user/EditProfilePage.jsx';
@@ -18,12 +19,12 @@ import Checkout from './pages/user/CheckOutPage.jsx';
 import FAQ from './pages/FAQPage.jsx';
 import TermsAndConditions from './pages/TermsAndConditionPage.jsx';
 import OpticalNews from './pages/NewsPage.jsx';
-import AdminSignup from "./pages/admin/SignupPage.jsx"
-import AdminLogin from "./pages/admin/LoginPage.jsx"
-import AdminDashboard from "./pages/admin/AdminDashboard.jsx"
-import ManageProduct from "./pages/admin/ManageProduct.jsx"
-import ManageOrder from "./pages/admin/ManageOrederPage.jsx"
-import ManageNews from "./pages/admin/ManageNews.jsx"
+//import AdminSignup from "./pages/admin/SignupPage.jsx"
+//import AdminLogin from "./pages/admin/LoginPage.jsx"
+//import AdminDashboard from "./pages/admin/page.jsx"
+//import ManageProduct from "./pages/admin/ManageProduct.jsx"
+//import ManageOrder from "./pages/admin/ManageOrederPage.jsx"
+//import ManageNews from "./pages/admin/ManageNews.jsx"
 import { AuthLayout } from './components/index.js'
 
 
@@ -70,6 +71,14 @@ const router = createBrowserRouter([
         element: (
           <AuthLayout authentication ={true}>
             <ProductDetail />
+          </AuthLayout>
+        )
+      },
+      {
+        path: '/orderDetails/:orderId',
+        element:(
+          <AuthLayout authentication ={true}>
+            <OrderDetails />
           </AuthLayout>
         )
       },
@@ -122,53 +131,7 @@ const router = createBrowserRouter([
         element:(
             <OpticalNews/>
         )
-      },
-      {
-        path:'/admin/signup',
-        element:(
-          <AuthLayout authentication={false}>
-          <AdminSignup/>
-          </AuthLayout>
-        )
-      },
-      {
-        path:'/admin/login',
-        element:(
-          <AuthLayout authentication={false}>
-          <AdminLogin/>
-          </AuthLayout>
-        )
-      },
-      {
-        path:'/admin/dashboard',
-        element:(
-        <AuthLayout authentication={false}>
-        <AdminDashboard/>
-        </AuthLayout>
-      )
-      },
-      {
-        path:'/admin/products',
-        element:( 
-        <AuthLayout authentication={false}>
-          <ManageProduct/>
-        </AuthLayout>)
-      },
-      {
-        path:'/admin/orders',
-        element:( 
-        <AuthLayout authentication={false}>
-          <ManageOrder/>
-        </AuthLayout>)
-      },
-      {
-        path:'/admin/news',
-        element:(
-          <AuthLayout authentication={false}>
-          <ManageNews/>
-          </AuthLayout>
-        )
-      }
+      },  
     ]
   }
 ])

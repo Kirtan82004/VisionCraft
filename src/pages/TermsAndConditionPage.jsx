@@ -1,3 +1,4 @@
+
 import React from "react";
 import {Container} from '../components/index.js'
 import TermsAndcondition from '../components/Terms.jsx'
@@ -12,4 +13,4 @@ const SignUpPage = ()=>{
     )
 }
 
-export default SignUpPage;
+export default SignUpPage;  //exporting the component

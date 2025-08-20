@@ -8,9 +8,11 @@ const getCart = async () => {
         console.error(error);
     }
 }
-const addToCart = async (productId) => {
+const addToCart = async(cart)=> {
     try {
-        const res = await API.post('users/addToCart', productId);
+        console.log("cart",cart)
+    
+        const res = await API.post('users/addToCart', cart);
         return res.data;
     } catch (error) {
         return error.response.data;
@@ -38,4 +40,4 @@ export {
     addToCart,
     removeFromCart,
     clearCart
-};
+}

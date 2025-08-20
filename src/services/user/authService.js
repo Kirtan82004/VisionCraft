@@ -105,4 +105,4 @@ export {
     updateAccountDetails,
     updatePassword,
     updateProfileImage
-};
+}

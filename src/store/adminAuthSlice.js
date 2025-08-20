@@ -1,3 +1,4 @@
+
 // src/slices/adminAuthSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 const getAuthFromLocalStorage = () => {
@@ -53,4 +54,5 @@ export const {
   signupSuccess,
   signupFailure
 } = adminAuthSlice.actions;
+
 export default adminAuthSlice.reducer;

@@ -1,30 +1,32 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import {getOrderDetails} from '../../services/user/orderService.js'
+"use client"
+
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import { getOrderDetails } from "../../services/user/orderService.js"
 
 const OrderDetail = () => {
-  const { orderId } = useParams(); // URL se orderId extract karna
-  const [order, setOrder] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { orderId } = useParams()
+  const [order, setOrder] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
-        const response = await getOrderDetails(orderId);
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.message || "Failed to fetch order details");
-
-        setOrder(data.order);
+        const response = await getOrderDetails(orderId)
+        if (!response || !response.data || response.data.length === 0) {
+          throw new Error("Order not found")
+        }
+        setOrder(response.data[0])
       } catch (err) {
-        setError(err.message);
+        setError(err.message)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchOrderDetails();
-  }, [orderId]);
+    fetchOrderDetails()
+  }, [orderId])
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -43,28 +45,54 @@ const OrderDetail = () => {
           </p>
           <p className="text-gray-700 mb-2">
             <strong>Payment:</strong>{" "}
-            <span className={order.paymentStatus === "paid" ? "text-green-500" : "text-red-500"}>
+            <span className={order.paymentStatus === "Success" ? "text-green-500" : "text-red-500"}>
               {order.paymentStatus}
             </span>
           </p>
+          <p className="text-gray-700 mb-2">
+            <strong>Payment Method:</strong> {order.paymentMethod}
+          </p>
           <p className="text-gray-700 mb-4">
-            <strong>Total Amount:</strong> ${order.orderTotal}
+            <strong>Total Amount:</strong> ₹{order.orderTotal}
           </p>
 
-          <h4 className="text-lg font-bold mb-2">Shipping Address:</h4>
-          <p className="text-gray-700 mb-4">{order.shippingAddress}</p>
+          <h4 className="text-lg font-bold mb-2">Shipping Details:</h4>
+          <p className="text-gray-700 mb-4">
+            <span className="font-bold">FullName:</span>
+            {order.shippingDetails?.fullName},<br />
+            <span className="font-bold">Email:</span>
+            {order.shippingDetails?.email},<br />
+            <span className="font-bold">Address:</span>
+            {order.shippingDetails?.address}
+          </p>
 
           <h4 className="text-lg font-bold mb-2">Ordered Items:</h4>
-          {order.products.map((item) => (
-            <div key={item.product._id} className="flex justify-between mb-2">
-              <span>{item.product.name} (x{item.quantity})</span>
-              <span>${item.price * item.quantity}</span>
-            </div>
-          ))}
+          <ul className="space-y-4">
+            {order.products?.map((item, index) => (
+              <li key={index} className="border p-4 rounded">
+                <div className="flex items-center">
+                  <img
+                    src={item.product?.images?.[0]}
+                    alt={item.product?.name}
+                    className="w-20 h-20 object-cover rounded mr-4"
+                  />
+                  <div>
+                    <h5 className="text-md font-bold">{item.product?.name}</h5>
+                    <p className="text-gray-600">{item.product?.description}</p>
+                    <p className="text-sm text-gray-700">Category: {item.product?.category}</p>
+                    <p className="text-sm">
+                      Quantity: {item.quantity} × ₹{item.price}
+                    </p>
+                    <p className="text-sm font-semibold">Total: ₹{item.quantity * item.price}</p>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default OrderDetail;
+export default OrderDetail

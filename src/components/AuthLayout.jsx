@@ -1,9 +1,10 @@
+
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 
-const Protected = ({ children, authentication = true }) => {
+const AuthLayout = ({ children, authentication = true }) => {
     const navigate = useNavigate();
     const [loader, setLoader] = useState(true)
     const { status: userStatus } = useSelector((state) => state.auth);
@@ -30,5 +31,5 @@ const Protected = ({ children, authentication = true }) => {
     return <>{children}</>
 
 }
+export default AuthLayout;  // export the component
 
-export default Protected

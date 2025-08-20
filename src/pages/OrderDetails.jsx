@@ -1,16 +1,16 @@
 
 import React from "react";
 import {Container} from '../components/index.js'
-import News from '../components/News.jsx'
+import OrderDetails from "../components/user/OrderDetails.jsx";
 
-const NewsPage = ()=>{
+const OrderDetailPage = ()=>{
     return(
         <>
         <Container>
-            <News />
+            <OrderDetails />
         </Container>
         </>
     )
 }
 
-export default NewsPage;  
+export default OrderDetailPage;  

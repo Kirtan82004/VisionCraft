@@ -6,30 +6,33 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { addToSavedItems } from '../store/wishlistSlice';
 import { addToWishlist } from '../services/user/wishlistService';
+import toast from 'react-hot-toast';
 
 const ProductCard = ({ product }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const userStatus = useSelector((state) => state.auth.status);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log("product",product)
 
   const handleWishlist = async () => {
     if (!userStatus) {
-      alert('Please log in to use the wishlist feature.');
+      toast.error('Please log in to use the wishlist feature.');
       return;
     }
 
     try {
       if (!isWishlisted) {
-        const response = await addToWishlist(product._id);
+        const response = await addToWishlist({ product });
+
         if (!response || !response.data) throw new Error('Invalid response');
-        dispatch(addToSavedItems(product._id));
-        alert('Added to wishlist');
+        dispatch(addToSavedItems({ product }));
+        toast('💖 Added to your wishlist!', { icon: '✨' });
+      } else {
+        toast('❌ Removed from wishlist', { icon: '💔' });
       }
       setIsWishlisted(!isWishlisted);
     } catch (err) {
-      alert('Failed to update wishlist');
+      toast.error('Failed to update wishlist');
       console.error('Wishlist Error:', err.message);
     }
   };
@@ -39,47 +42,49 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="rounded-2xl overflow-hidden shadow-md hover:shadow-xl bg-white transition-transform transform hover:-translate-y-1 duration-300">
+    <div className="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl bg-white/70 backdrop-blur-lg transition-transform transform hover:-translate-y-2 duration-300 border border-gray-100">
       {/* Image Section */}
       <div className="relative group">
         <img
           onClick={handleProductDetail}
           src={Array.isArray(product.images) ? product.images[0] : product.images}
           alt={product.name}
-          className="w-full h-60 sm:h-72 object-cover cursor-pointer transition duration-300 group-hover:scale-105"
+          className="w-full h-60 sm:h-72 object-cover cursor-pointer transition-transform duration-500 group-hover:scale-110"
         />
 
         {/* Badge */}
-        <span className="absolute top-2 right-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs font-semibold px-2 py-1 rounded-lg shadow">
-          {product.isNew ? 'New Arrival' : 'Special Offer'}
+        <span className="absolute top-3 right-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg animate-pulse">
+          {product.isNew ? '🌟 New Arrival' : '🔥 Special Offer'}
         </span>
 
         {/* Wishlist Icon */}
         {userStatus && (
           <button
             onClick={handleWishlist}
-            className="absolute top-2 left-2 p-2 rounded-full bg-white bg-opacity-80 hover:bg-opacity-100 transition-colors shadow"
+            className="absolute top-3 left-3 p-2 rounded-full bg-white/80 hover:bg-white shadow-md transition-all"
           >
             {isWishlisted ? (
-              <SolidHeart className="w-5 h-5 text-red-500" />
+              <SolidHeart className="w-6 h-6 text-red-500" />
             ) : (
-              <OutlineHeart className="w-5 h-5 text-gray-700" />
+              <OutlineHeart className="w-6 h-6 text-gray-700" />
             )}
           </button>
         )}
       </div>
 
       {/* Product Info */}
-      <div className="p-4 flex flex-col gap-2">
+      <div className="p-5 flex flex-col gap-3">
         <h3 className="text-lg font-bold text-gray-800 line-clamp-1">{product.name}</h3>
         <p className="text-sm text-gray-500 line-clamp-2">{product.description}</p>
 
         {/* Ratings */}
-        <div className="flex items-center gap-1 mt-1">
+        <div className="flex items-center gap-1">
           {Array.from({ length: 5 }, (_, index) => (
             <StarIcon
               key={index}
-              className={`w-4 h-4 ${index < product.ratings ? 'text-yellow-400' : 'text-gray-300'}`}
+              className={`w-5 h-5 transition-colors duration-300 ${
+                index < product.ratings ? 'text-yellow-400' : 'text-gray-300'
+              }`}
             />
           ))}
         </div>

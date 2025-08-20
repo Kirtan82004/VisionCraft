@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Container} from '../../components/index.js'
 import Checkout from "../../components/user/CheckOut.jsx";
@@ -11,4 +12,5 @@ const CheckoutPage =()=>{
         </>
     )
 }
+
 export default CheckoutPage;

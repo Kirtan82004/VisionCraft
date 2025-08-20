@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,8 +17,9 @@ import {
   editProductReview,
 } from "../../services/user/reviewService";
 
-const AddProductReview = ({ onReviewAdded }) => {
+const AddProductReview = () => {
   const { productId } = useParams();
+  console.log("AddProductReview",productId)
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const dispatch = useDispatch();
@@ -27,7 +29,8 @@ const AddProductReview = ({ onReviewAdded }) => {
     e.preventDefault();
     dispatch(fetchReviewsStart());
     try {
-      const response = await addProductReview(productId, { rating, comment });
+      const response = await addProductReview(productId, { rating, comment })
+      console.log("response",response);
       dispatch(addReview(response));
       setComment("");
       setRating(0);

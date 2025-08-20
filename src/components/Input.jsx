@@ -1,3 +1,4 @@
+
 import React, { useId } from "react";
 
 const Input = React.forwardRef(function Input(
@@ -31,5 +32,4 @@ const Input = React.forwardRef(function Input(
         </div>
     )
 })
-
-export default Input;
+export default Input;  // export the component

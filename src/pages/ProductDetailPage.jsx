@@ -1,8 +1,9 @@
+
 import React from "react";
 import {Container} from '../components/index.js'
 import ProductDetail from "../components/user/ProductDetails.jsx";
 
-const SignUpPage = ()=>{
+const ProductDetailPage = ()=>{
     return(
         <>
         <Container>
@@ -12,4 +13,4 @@ const SignUpPage = ()=>{
     )
 }
 
-export default SignUpPage;
+export default ProductDetailPage;  

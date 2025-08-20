@@ -1,11 +1,16 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch} from "react-redux";
 import { createRazorpayOrder, placeOrder } from "../../services/user/orderService";
+import { removeFromCart } from "../../store/cartSlice";
+import {fetchOrdersSuccess} from "../../store/orderSlice"
+
+
 
 const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
 
 const Checkout = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const dispatch = useDispatch()
 
   const [formData, setFormData] = useState({
     name: "",
@@ -46,11 +51,13 @@ const Checkout = () => {
     const razorpayOrder = await createRazorpayOrder({
       amount: total * 100, // in paise
     });
+    console.log("razorpayOrder",razorpayOrder)
 
-    if (!razorpayOrder || !razorpayOrder.orderId) {
+    if (!razorpayOrder || !razorpayOrder.data) {
       alert("Failed to create Razorpay order");
       return;
     }
+    
 
     const options = {
       key: razorpayKey,
@@ -58,9 +65,10 @@ const Checkout = () => {
       currency: "INR",
       name: "Optical Shop",
       description: "Order Payment",
-      order_id: razorpayOrder.orderId,
+      order_id: razorpayOrder.data.id,
       handler: async function (response) {
         // 2. Send final order placement request to backend
+        console.log("response",response)
         const orderPayload = {
           shippingDetails: {
             fullName: formData.name,
@@ -76,9 +84,15 @@ const Checkout = () => {
         };
 
         const orderResponse = await placeOrder(orderPayload);
-
+        console.log("orderResponse",orderResponse)
         if (orderResponse && orderResponse.order) {
+          console.log("orderResponse",orderResponse)
+          cartItems.map((item)=>{
+            dispatch(removeFromCart(item._id))
+          })
+          dispatch(fetchOrdersSuccess({order :orderResponse.order}))
           alert("Order placed successfully!");
+
           // Optionally: navigate to success page
         } else {
           alert("Order failed to place. Please contact support.");

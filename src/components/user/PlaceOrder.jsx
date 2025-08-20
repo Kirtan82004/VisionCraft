@@ -1,3 +1,4 @@
+
 import { useSelector, useDispatch } from "react-redux";
 import { clearCart } from "../../store/cartSlice"; // Redux action
 import { useState } from "react";
@@ -47,6 +48,7 @@ const PlaceOrder = () => {
 
      try {
         const res = await placeOrder(orderData)
+        console.log("placeorder",res)
         if (!res.ok) throw new Error(data.message || "Failed to place order");
      } catch (error) {
         console.log(error.message)

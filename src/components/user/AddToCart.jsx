@@ -1,16 +1,18 @@
+
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../store/cartSlice";
 import { ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const AddToCart = ({ product }) => {
+const AddToCart =({ product }) => {
+  console.log("product")
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const userStatus = useSelector((state)=>state.auth.status)
   const navigate=useNavigate()
 
-  const handleOnClick = () => {
+  const handleOnClick =  async () => {
     if (userStatus ) {
       setLoading(true);
       dispatch(addToCart(product));

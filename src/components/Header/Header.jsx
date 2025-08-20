@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { ShoppingCartButton, Logo, LogoutBtn, SearchBar } from '../index.js';
+import { ShoppingCartButton, Logo, LogoutBtn} from '../index.js';
 import { Menu, X, ChevronDown } from "lucide-react";
 
 const Header = () => {
@@ -11,6 +12,9 @@ const Header = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  console.log("userStatus",userStatus)
+  console.log("adminStatus",adminStatus)
+  
 
   // Navigation items for different users
   const guestNavItems = [
@@ -65,7 +69,7 @@ const Header = () => {
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-6">
           {/* Desktop SearchBar */}
-          <SearchBar />
+          
 
           {navItems.map(item => 
             item.active && (
@@ -109,9 +113,7 @@ const Header = () => {
           </div>
 
           {(userStatus || adminStatus) && (
-            <button className="px-4 py-2 rounded-full hover:bg-blue-600 transition duration-200 ease-in-out">
-              <LogoutBtn />
-            </button>
+            <LogoutBtn />
           )}
           {userStatus && (
             <div className="ml-2">
@@ -124,7 +126,7 @@ const Header = () => {
       {/* Mobile Menu Dropdown */}
       {isOpen && (
         <div className="md:hidden bg-gray-800 text-white px-4 pb-4 pt-2 shadow-lg transition-all duration-300">
-          <SearchBar />
+          
           <ul className="mt-4 space-y-3">
             {navItems.map(item => 
               item.active && (

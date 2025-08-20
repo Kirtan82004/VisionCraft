@@ -1,13 +1,30 @@
+
 import { useSelector, useDispatch } from "react-redux";
 import { increaseQuantity, decreaseQuantity, removeFromCart } from "../../store/cartSlice";
 import { Plus, Minus, Trash2, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import {addToCart} from "../../services/user/cartService"
 
 const Cart = () => {
   const { cartItems } = useSelector((state) => state.cart);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   console.log("cartItems", cartItems)
+  
+  const handleCart =()=>{
+    try {
+      cartItems.map( async(item)=>{
+
+        const res= await addToCart(item)
+        console.log(res)
+      })
+    } catch (error) {
+      console.log(error)
+    }
+    
+   
+    navigate('/checkout')
+  }
 
 
 
@@ -71,7 +88,7 @@ const Cart = () => {
           </div>
 
           {/* Checkout Button */}
-          <button onClick={()=>navigate('/checkout')} className="w-full mt-4 bg-blue-500 text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition">
+          <button onClick={handleCart} className="w-full mt-4 bg-blue-500 text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition">
             Proceed to Checkout
           </button>
         </>

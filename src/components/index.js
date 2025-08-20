@@ -1,9 +1,9 @@
+
 import Header from './Header/Header';
 import Footer from './Footer/Footer';
 import Logo from './Logo';
 import Container from './Container/Container';
 import ShoppingCartButton from './CartBtn';
-import SearchBar from './SearchBar';
 import LogoutBtn from './Header/Logout';
 import Input from './Input';
 import Button from './Buttun'
@@ -23,7 +23,6 @@ export {
     Logo,
     Container,
     ShoppingCartButton,
-    SearchBar,
     LogoutBtn,
     Input,
     Button,

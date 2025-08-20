@@ -1,3 +1,4 @@
+
 import { useSelector } from "react-redux";
 import ShoppingCartIcon from "./ShoppingCartIcon";  // Import your shopping cart icon component
 import {  useNavigate } from "react-router-dom";
