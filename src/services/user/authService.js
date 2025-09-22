@@ -4,13 +4,14 @@ import axios from "axios";
 
 const API_URL = conf.API_URL;
 
+// ✅ Register user
 const registerUser = async (formData) => {
     try {
-        console.log(formData);
-        const res = await axios.post(`${API_URL}/users/register`, formData);
-        console.log("API Response:", res);
+        const res = await axios.post(`${API_URL}/users/register`, formData, {
+            withCredentials: true
+        });
 
-        if (res) {
+        if (res.data?.success) {
             window.alert("Registration successful! Logging in...");
             return loginUser({ email: formData.email, password: formData.password });
         }
@@ -18,15 +19,18 @@ const registerUser = async (formData) => {
         return res.data;
     } catch (error) {
         window.alert(error.response?.data?.message || "Registration failed!");
-        return error.response.data;
+        return error.response?.data || { success: false };
     }
 };
 
+// ✅ Login user
 const loginUser = async (formData) => {
     try {
-        const res = await axios.post(`${API_URL}/users/login`, formData, { withCredentials: true });
+        const res = await axios.post(`${API_URL}/users/login`, formData, {
+            withCredentials: true
+        });
         window.alert("Login successful!");
-        return res.data; // return login response data
+        return res.data;
     } catch (error) {
         const msg = error.response?.data?.message || "Login failed!";
         window.alert(msg);
@@ -34,67 +38,75 @@ const loginUser = async (formData) => {
     }
 };
 
+// ✅ Logout user
 const logoutUser = async () => {
     try {
-        const res = await axios.post(`${API_URL}/users/logout`, { withCredentials: true });
-        console.log(res)
-        window.alert("User have been logged out.");
-    } catch (error) {
-        window.alert("User Logout failed! Try again.");
-        console.log(error.message)
-        console.log(error)
-        return error.message;
-    }
-};
-
-const getCurrentUser = async () => {
-    try {
-        const res = await API.get('users/current-User');
+        const res = await axios.post(`${API_URL}/users/logout`, {}, {
+            withCredentials: true
+        });
+        window.alert("User has been logged out.");
         return res.data;
     } catch (error) {
-        return error.message;
+        window.alert("User Logout failed! Try again.");
+        return error.response?.data || { success: false };
     }
 };
 
+// ✅ Get current user
+const getCurrentUser = async () => {
+    try {
+        const res = await API.get("users/current-User", { withCredentials: true });
+        return res.data;
+    } catch (error) {
+        return error.response?.data || { success: false };
+    }
+};
+
+// ✅ Update account details
 const updateAccountDetails = async (userData) => {
     try {
-        const res = await API.patch('users/update-Account', userData);
+        const res = await API.patch("users/update-Account", userData, {
+            withCredentials: true
+        });
         window.alert("Account details updated successfully!");
-        console.log("updateuser",res.data)
         return res.data;
     } catch (error) {
         window.alert(error.response?.data?.message || "Update failed!");
-        return error.response.data;
+        return error.response?.data || { success: false };
     }
 };
 
+// ✅ Update password
 const updatePassword = async (formData) => {
     try {
-        const res = await API.patch('users/change-Password', formData);
+        const res = await API.patch("users/change-Password", formData, {
+            withCredentials: true
+        });
         window.alert("Password changed successfully!");
-        return res;
+        return res.data;
     } catch (error) {
         window.alert(error.response?.data?.message || "Password update failed!");
-        return error.response.data;
+        return error.response?.data || { success: false };
     }
 };
 
+// ✅ Update profile image
 const updateProfileImage = async (imageFile) => {
     try {
         const formData = new FormData();
-        formData.append('image', imageFile);
+        formData.append("image", imageFile);
 
-        const res = await API.patch('users/update-Image', formData, {
+        const res = await API.patch("users/update-Image", formData, {
+            withCredentials: true,
             headers: {
-                'Content-Type': 'multipart/form-data'
+                "Content-Type": "multipart/form-data"
             }
         });
         window.alert("Profile image updated successfully!");
-        console.log("updateimage",res.data)
         return res.data;
     } catch (error) {
         window.alert(error.response?.data?.message || "Image update failed!");
-        return error.response.data;
+        return error.response?.data || { success: false };
     }
 };
 
@@ -106,4 +118,4 @@ export {
     updateAccountDetails,
     updatePassword,
     updateProfileImage
-}
+};
