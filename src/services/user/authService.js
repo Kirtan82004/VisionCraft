@@ -36,12 +36,13 @@ const loginUser = async (formData) => {
 
 const logoutUser = async () => {
     try {
-        const res = await axios.post(`${API_URL}/users/logout`, {}, { withCredentials: true });
+        const res = await axios.post(`${API_URL}/users/logout`, { withCredentials: true });
         console.log(res)
         window.alert("User have been logged out.");
     } catch (error) {
         window.alert("User Logout failed! Try again.");
         console.log(error.message)
+        console.log(error)
         return error.message;
     }
 };
