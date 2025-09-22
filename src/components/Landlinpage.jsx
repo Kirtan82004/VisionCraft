@@ -1,12 +1,33 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaShoppingCart, FaInfoCircle, FaGlasses, FaStar, FaUserCheck } from "react-icons/fa";
 import HeroImage from "../assets/hero.jpg";
+import logo from '../assets/logo.png';
 
 const LandingPage = () => {
   return (
-    <main className="bg-gradient-to-b from-blue-50 via-white to-white min-h-screen px-4 py-12 max-w-screen-xl mx-auto">
+    <main className="bg-gradient-to-b from-blue-50 via-white to-white min-h-screen px-4 py-12 pt max-w-screen-xl mx-auto">
+
+      {/* Logo at Top */}
+      <header className=" py-11 flex items-center justify-center ">
+        <Link
+          to="/"
+          className="flex items-center space-x-2 hover:scale-105 transform transition duration-300"
+        >
+          <div className="relative">
+            <img
+              src={logo}
+              alt="VisionCraft Logo"
+              className="h-12 w-12 md:h-16 md:w-16 drop-shadow-[0_0_12px_rgba(59,130,246,0.7)] rounded-full"
+            />
+            <div className="absolute -bottom-1 -right-1 h-3 w-3 bg-blue-500 rounded-full animate-pulse"></div>
+          </div>
+          <span className="font-extrabold text-2xl md:text-3xl bg-gradient-to-r from-blue-400 via-purple-400 to-pink-500 bg-clip-text text-transparent">
+            VisionCraft
+          </span>
+        </Link>
+      </header>
+
       {/* Hero Section */}
       <section className="text-center pt-10">
         <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
@@ -23,13 +44,13 @@ const LandingPage = () => {
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <Link
             to="/products"
-            className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition"
+            className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition shadow-lg hover:shadow-xl"
           >
             <FaShoppingCart /> Shop Now
           </Link>
           <Link
             to="/about"
-            className="inline-flex items-center gap-2 bg-gray-600 text-white px-6 py-3 rounded-full hover:bg-gray-700 transition"
+            className="inline-flex items-center gap-2 bg-gray-600 text-white px-6 py-3 rounded-full hover:bg-gray-700 transition shadow-lg hover:shadow-xl"
           >
             <FaInfoCircle /> Learn More
           </Link>
@@ -38,7 +59,7 @@ const LandingPage = () => {
 
       {/* Features Section */}
       <section className="mt-16 grid gap-6 sm:grid-cols-2 md:grid-cols-3 text-center">
-        <div className="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+        <div className="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300 hover:scale-105">
           <div className="text-blue-600 text-3xl mb-3 mx-auto">
             <FaStar />
           </div>
@@ -48,7 +69,7 @@ const LandingPage = () => {
           </p>
         </div>
 
-        <div className="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+        <div className="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300 hover:scale-105">
           <div className="text-blue-600 text-3xl mb-3 mx-auto">
             <FaGlasses />
           </div>
@@ -58,7 +79,7 @@ const LandingPage = () => {
           </p>
         </div>
 
-        <div className="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+        <div className="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300 hover:scale-105">
           <div className="text-blue-600 text-3xl mb-3 mx-auto">
             <FaUserCheck />
           </div>

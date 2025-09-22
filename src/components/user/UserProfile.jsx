@@ -60,6 +60,8 @@ const Profile = () => {
       </p>
     );
   }
+  console.log(typeof orders)
+  console.log("orders", orders)
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-16 sm:mt-20">

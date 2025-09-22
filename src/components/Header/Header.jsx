@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { ShoppingCartButton, Logo, LogoutBtn} from '../index.js';
+import { ShoppingCartButton, Logo, LogoutBtn } from '../index.js';
 import { Menu, X, ChevronDown } from "lucide-react";
+import logo from '../../assets/logo.png';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -12,9 +13,9 @@ const Header = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
-  console.log("userStatus",userStatus)
-  console.log("adminStatus",adminStatus)
-  
+  console.log("userStatus", userStatus)
+  console.log("adminStatus", adminStatus)
+
 
   // Navigation items for different users
   const guestNavItems = [
@@ -54,8 +55,19 @@ const Header = () => {
     <header className="bg-gray-900 text-white shadow-md fixed w-full top-0 left-0 z-50">
       <nav className="flex items-center justify-between px-4 py-3 md:container md:mx-auto">
         {/* Logo */}
-        <Link to="/" className="flex items-center">
-          <Logo width="70px" />
+        <Link
+          to="/"
+          className="flex items-center space-x-2 hover:scale-105 transform transition duration-300"
+        >
+          <img
+              src={logo}
+              alt="Logo"
+              className="h-12 w-12 rounded-full shadow-md border-2 border-indigo-500 hover:scale-110 hover:shadow-lg transition-transform duration-300"
+            />
+          {/* Logo Text with Gradient */}
+          <span className="font-extrabold text-lg md:text-2xl bg-gradient-to-r from-blue-400 via-purple-400 to-pink-500 bg-clip-text text-transparent">
+            VisionCraft
+          </span>
         </Link>
 
         {/* Mobile Menu Button */}
@@ -69,9 +81,9 @@ const Header = () => {
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-6">
           {/* Desktop SearchBar */}
-          
 
-          {navItems.map(item => 
+
+          {navItems.map(item =>
             item.active && (
               <button
                 key={item.name}
@@ -126,9 +138,9 @@ const Header = () => {
       {/* Mobile Menu Dropdown */}
       {isOpen && (
         <div className="md:hidden bg-gray-800 text-white px-4 pb-4 pt-2 shadow-lg transition-all duration-300">
-          
+
           <ul className="mt-4 space-y-3">
-            {navItems.map(item => 
+            {navItems.map(item =>
               item.active && (
                 <li key={item.name}>
                   <button
@@ -143,7 +155,7 @@ const Header = () => {
                 </li>
               )
             )}
-            {moreNavItems.map(item => 
+            {moreNavItems.map(item =>
               item.active && (
                 <li key={item.name}>
                   <button
