@@ -26,7 +26,7 @@ const placeOrder = async (orderData) => {
 // Step 3: For History and Order Management
 const getOrderHistory = async () => {
     try {
-        const res = await API.get('users/getOrderHistory');
+        const res = await API.get('users/getOrderHistory',{ withCredentials: true });
         return res.data;
     } catch (error) {
         return error.response?.data || { success: false };
