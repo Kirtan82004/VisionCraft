@@ -6,6 +6,7 @@ const API_URL = conf.API_URL;
 
 // ✅ Register user
 const registerUser = async (formData) => {
+    console.log("formData in authService",formData)
     try {
         const res = await axios.post(`${API_URL}/users/register`, formData, {
             withCredentials: true // 👈 cookies ke liye mandatory

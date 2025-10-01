@@ -10,9 +10,11 @@ function App() {
 const [loading, setLoading] = useState(true);
 const auth = useSelector((state)=>state.auth)
 const dispatch = useDispatch();
+console.log("auth",auth)
 
 useEffect(() => {
   const storedAuth = localStorage.getItem("auth");
+  console.log("storedAuth",storedAuth)
   if (!storedAuth && auth.status) {
     dispatch(userLogout());
   } 
