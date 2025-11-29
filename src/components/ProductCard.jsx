@@ -13,6 +13,7 @@ const ProductCard = ({ product }) => {
   const userStatus = useSelector((state) => state.auth.status);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  //console.log('Product in Card:', product);
 
   const handleWishlist = async () => {
     if (!userStatus) {
@@ -53,7 +54,7 @@ const ProductCard = ({ product }) => {
         />
 
         {/* Badge */}
-        <span className="absolute top-3 right-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg animate-pulse">
+        <span className="absolute top-3 right-3 bg-linear-to-r from-purple-500 to-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg animate-pulse">
           {product.isNew ? '🌟 New Arrival' : '🔥 Special Offer'}
         </span>
 
@@ -91,7 +92,7 @@ const ProductCard = ({ product }) => {
 
         {/* Price + Cart */}
         <div className="flex justify-between items-center mt-3">
-          <span className="text-xl font-semibold text-green-600">${product.price}</span>
+          <span className="text-xl font-semibold text-green-600">₹{product.price}</span>
           <AddToCart product={product} />
         </div>
       </div>

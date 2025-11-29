@@ -59,7 +59,7 @@ const values = [
 
 const AboutPage = () => {
   return (
-    <main className="px-4 py-10 max-w-screen-xl mx-auto ">
+    <main className="px-4 py-10 max-w-7xl mx-auto ">
       {/* About Section */}
       <section className="mb-16 pt-10">
         <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-center text-gray-800">

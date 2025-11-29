@@ -19,15 +19,21 @@ import Checkout from './pages/user/CheckOutPage.jsx';
 import FAQ from './pages/FAQPage.jsx';
 import TermsAndConditions from './pages/TermsAndConditionPage.jsx';
 import OpticalNews from './pages/NewsPage.jsx';
-//import AdminSignup from "./pages/admin/SignupPage.jsx"
-//import AdminLogin from "./pages/admin/LoginPage.jsx"
-//import AdminDashboard from "./pages/admin/page.jsx"
-//import ManageProduct from "./pages/admin/ManageProduct.jsx"
-//import ManageOrder from "./pages/admin/ManageOrederPage.jsx"
-//import ManageNews from "./pages/admin/ManageNews.jsx"
 import { AuthLayout } from './components/index.js'
-
-
+//-----------ADMIN COMPONENTS IMPORTS----------------
+import Dashboard from './components/admin/dashboard.jsx';
+import OrdersPage from './pages/admin/orders.jsx';
+import InventoryPage from './pages/admin/inventory.jsx';
+import InvoicesPage from './pages/admin/invoices.jsx';
+import AppointmentPage from './pages/admin/appointments.jsx';
+import CustomersPage from './pages/admin/customers.jsx';
+import NotificationsPage from './pages/admin/notifications.jsx';
+import SendMailPage from './pages/admin/sendMail.jsx';
+import ServicesPage from './pages/admin/services.jsx';
+import SettingsPage from './pages/admin/settings.jsx';
+import ProductDetailPage from './pages/admin/productDetails.jsx';
+import EditProductPage from './pages/admin/editProduct.jsx';
+import AddProductPage from './pages/admin/addProduct.jsx';
 
 const router = createBrowserRouter([
   {
@@ -131,7 +137,59 @@ const router = createBrowserRouter([
         element:(
             <OpticalNews/>
         )
-      },  
+      },
+      {
+        path:'/admin/dashboard',
+        element: <Dashboard/>
+      },
+      {
+        path:'/admin/orders',
+        element:  <OrdersPage />
+      },
+      {
+        path:'/admin/Inventory',
+        element: <InventoryPage/>
+      }  ,
+      {
+        path:'/admin/invoices',
+        element: <InvoicesPage/>
+      },
+      {
+        path:'/admin/appointments',
+        element: <AppointmentPage/>
+      },
+      {
+        path:'/admin/customers',
+        element: <CustomersPage/>
+      },
+      {
+        path:'/admin/notifications',
+        element: <NotificationsPage/>
+      },
+      {
+        path:'/admin/send-mail',
+        element: <SendMailPage/>
+      },
+      {
+        path:'/admin/services',
+        element: <ServicesPage/>
+      },
+      {
+        path:'/admin/settings',
+        element: <SettingsPage/>
+      },
+      {
+        path:'/admin/product/:id',
+        element: <ProductDetailPage/>
+      },
+      {
+        path:'/admin/product/edit/:id',
+        element: <EditProductPage/>
+      },
+      {
+        path:'/admin/product/add',
+        element: <AddProductPage/>
+      }
     ]
   }
 ])

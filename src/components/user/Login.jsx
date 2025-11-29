@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../services/user/authService';
+import { adminLoginSuccess,adminLoginFailure,adminLoginStart} from '../../store/adminAuthSlice.js'
 import { loginStart, loginSuccess, loginFailure } from '../../store/authSlice';
 import Input from '../Input';
 import { useNavigate } from 'react-router-dom';
@@ -23,23 +24,44 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+const handleLogin = async (e) => {
+  e.preventDefault();
+
+  try {
+    // Start loading state based on role? No → Start before API call
     dispatch(loginStart());
-    try {
-      const response = await loginUser(formData);
-      dispatch(loginSuccess(response.data.user));
-      navigate('/');
-    } catch (err) {
-      dispatch(loginFailure(err.message));
+    dispatch(adminLoginStart());
+
+    const response = await loginUser(formData);
+    const user = response?.user;
+
+    console.log("response login", user);
+
+    if (!user) throw new Error("Invalid user response");
+
+    if (user.role === "admin") {
+      dispatch(adminLoginSuccess(user));
+      navigate("/admin/dashboard");
+    } else {
+      dispatch(loginSuccess(user));
+      navigate("/");
     }
-  };
+
+  } catch (err) {
+    console.log("Login Error →", err.message);
+
+    // ROLE UNKNOWN → normal user error
+    dispatch(loginFailure(err.message));
+    dispatch(adminLoginFailure(err.message));
+  }
+};
+
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-emerald-100 flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-emerald-100 p-8 md:p-10">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <div className="w-16 h-16 bg-linear-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
             <span className="text-2xl text-white">🔐</span>
           </div>
           <h2 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h2>
@@ -94,7 +116,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold py-3 px-6 rounded-xl hover:from-emerald-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+            className="w-full bg-linear-to-br from-emerald-500 to-emerald-600 text-white font-semibold py-3 px-6 rounded-xl hover:from-emerald-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
           >
             {loading ? (
               <div className="flex items-center justify-center gap-2">

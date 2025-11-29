@@ -18,7 +18,7 @@ const categoryMap = {
 const ProductList = () => {
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.products);
-
+  console.log('Products from Redux:', products);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [brandFilter, setBrandFilter] = useState('all');
@@ -30,6 +30,7 @@ const ProductList = () => {
       dispatch(fetchProductsStart());
       try {
         const response = await getAllProducts();
+        console.log('Fetched Products:', response.data);
         dispatch(fetchProductsSuccess(response.data));
         dispatch(setAllProducts(response.data));
       } catch (err) {
@@ -81,7 +82,7 @@ const ProductList = () => {
   const filtered = filterProducts();
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 mt-20">
       {loading && <p className="text-center text-lg font-medium">Loading products...</p>}
       {error && <p className="text-center text-red-600 font-semibold">{error}</p>}
 

@@ -12,7 +12,7 @@ const getAllProducts = async () => {
         console.log('No products found');
     }
   
-    return response.data; // Returning the product data
+    return response.data.data; // Returning the product data
   } catch (error) {
     console.error('Error fetching products:', error);
     console.log(error.message)

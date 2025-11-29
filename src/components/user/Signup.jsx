@@ -5,7 +5,7 @@ import { useState } from "react"
 import { Input } from "../index.js"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { signupStart, signupSuccess, signupFailure, loginSuccess } from "../../store/authSlice"
+import { signupStart, signupSuccess, signupFailure } from "../../store/authSlice"
 import { registerUser } from "../../services/user/authService"
 import { FiEye, FiEyeOff, FiUser, FiMail, FiPhone, FiMapPin } from "react-icons/fi"
 
@@ -47,11 +47,11 @@ const UserSignup = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 flex items-center justify-center px-4 py-8">
+    <div className="min-h-screenbg-linear-to-br from-emerald-50 via-white to-teal-50 flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <div className="w-16 h-16 bg-linear-to-br from-emerald-600 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
             <FiUser size={24} className="text-white" />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h2>
@@ -179,7 +179,7 @@ const UserSignup = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-emerald-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full bg-linear-to-r from-emerald-600 to-teal-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-emerald-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

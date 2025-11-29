@@ -2,7 +2,7 @@
 import React ,{useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {logoutUser} from "../../services/user/authService.js"
-import {logoutAdmin} from "../../services/admin/authService.js"
+//import {logoutAdmin} from "../../services/admin/authService.js"
 import {userLogout} from "../../store/authSlice.js"
 import {adminLogout} from "../../store/adminAuthSlice.js"
 import {getCurrentUser} from "../../services/user/authService.js"
@@ -15,7 +15,7 @@ const LogoutBtn = () => {
     const admin = useSelector((state)=>state.adminAuth.status);
     const user = useSelector((state)=>state.auth.status);
 
-    console.log(admin,user)
+    //console.log(admin,user)
 
     
     const handleLogout = async() => {
@@ -23,11 +23,13 @@ const LogoutBtn = () => {
 
         if(user){
             await logoutUser()
+            localStorage.removeItem("auth")
             dispatch(userLogout())
+            navigate('/')
             
         }
         if(admin){
-            await logoutAdmin()
+            //await logoutAdmin()
             dispatch(adminLogout())
             navigate('/')
         }

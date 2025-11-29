@@ -3,8 +3,8 @@ import API from "../../utils/axiosInstance";
 
 const getDashboardStats = async () => {
     try {
-        const res = await API.get('admin/dashboard/stats');
-        return res.data;
+        const res = await API.get('admin/dashboard');
+        return res.data.data;
     } catch (error) {
         return error.response.data;
     }

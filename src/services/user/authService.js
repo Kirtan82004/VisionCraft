@@ -32,7 +32,9 @@ const loginUser = async (formData) => {
             withCredentials: true // 👈 cookies ke liye mandatory
         });
         window.alert("Login successful!");
-        return res.data;
+        console.log("Login Response:", res.data.data);
+        //localStorage.setItem("user", JSON.stringify({refreshToken:res.data.data.refreshToken})) // ✅ Login hone par localStorage me save karo
+        return res.data.data;
     } catch (error) {
         console.error("Login Error:", error);
         const msg = error.response?.data?.message || "Login failed!";
@@ -60,6 +62,7 @@ const logoutUser = async () => {
 const getCurrentUser = async () => {
     try {
         const res = await API.get("users/current-User", { withCredentials: true });
+        console.log("GetCurrentUser Response:", res.data);
         return res.data;
     } catch (error) {
         console.error("GetCurrentUser Error:", error);
@@ -112,6 +115,19 @@ const updateProfileImage = async (imageFile) => {
     }
 };
 
+const refreshAccessToken = async () => {
+    try {
+        const res = await API.post(`users/refresh-Token`, {
+            withCredentials: true
+        });
+        return res.data.data.accessToken;       
+
+    } catch (error) {
+        console.error("RefreshToken Error:", error);
+        return null;
+    }
+}
+
 export {
     registerUser,
     loginUser,
@@ -119,5 +135,6 @@ export {
     getCurrentUser,
     updateAccountDetails,
     updatePassword,
-    updateProfileImage
+    updateProfileImage,
+    refreshAccessToken
 };

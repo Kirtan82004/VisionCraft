@@ -23,13 +23,13 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="bg-gradient-to-b from-white via-blue-50 to-blue-100 min-h-screen">
+    <div className="bg-linear-to-b from-white via-blue-50 to-blue-100 min-h-screen">
       {/* Hero Section */}
       <LandingPage />
 
       {/* Key Features */}
       <section className="py-12 bg-white">
-        <div className="max-w-screen-xl mx-auto grid gap-6 sm:grid-cols-3 px-4">
+        <div className="max-w-7xl mx-auto grid gap-6 sm:grid-cols-3 px-4">
           {[
             { icon: "🚚", title: "Free Delivery", desc: "On all orders above $50" },
             { icon: "🛡️", title: "Secure Payment", desc: "100% safe & encrypted" },
@@ -51,7 +51,7 @@ const Home = () => {
       </section>
 
       {/* Featured Products */}
-      <section className="px-4 py-12 max-w-screen-xl mx-auto">
+      <section className="px-4 py-12 max-w-7xl mx-auto">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -96,7 +96,7 @@ const Home = () => {
 
       {/* Testimonials */}
       <section className="py-16 bg-white">
-        <div className="max-w-screen-xl mx-auto px-4 text-center">
+        <div className="max-w-7xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-8">What Our Customers Say</h2>
           <div className="grid gap-6 sm:grid-cols-3">
             {[
@@ -117,8 +117,8 @@ const Home = () => {
       </section>
 
       {/* Newsletter Signup */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-        <div className="max-w-screen-md mx-auto text-center px-4">
+      <section className="py-16 bg-linear-to-r from-blue-600 to-indigo-600 text-white">
+        <div className="max-w-3xl mx-auto text-center px-4">
           <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
           <p className="mb-6 text-lg">Subscribe to get special offers, free giveaways, and updates.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">

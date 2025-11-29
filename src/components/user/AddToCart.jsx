@@ -6,7 +6,7 @@ import { ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const AddToCart =({ product }) => {
-  console.log("product")
+  //console.log("product")
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const userStatus = useSelector((state)=>state.auth.status)
