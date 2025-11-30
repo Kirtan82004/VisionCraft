@@ -62,7 +62,7 @@ const logoutUser = async () => {
 // ✅ Get current user
 const getCurrentUser = async () => {
     try {
-        const res = await axios.get(`${API_URL}/users/current-User`, { withCredentials: true });
+        const res = await axios.get(`${API_URL}/users/current-User`,{}, { withCredentials: true });
         console.log("GetCurrentUser Response:", res.data);
         return res.data;
     } catch (error) {
