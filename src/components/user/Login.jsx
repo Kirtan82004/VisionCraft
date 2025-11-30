@@ -33,6 +33,7 @@ const handleLogin = async (e) => {
     dispatch(adminLoginStart());
 
     const response = await loginUser(formData);
+    console.log("response",response);
     const user = response?.user;
 
     console.log("response login", user);
