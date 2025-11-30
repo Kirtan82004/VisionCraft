@@ -1,4 +1,4 @@
-import API from "../../utils/axiosInstance";
+
 import conf from "../../conf/conf";
 import axios from "axios";
 
@@ -45,6 +45,7 @@ const loginUser = async (formData) => {
 
 // ✅ Logout user
 const logoutUser = async () => {
+    console.log("Logging out user...");
     try {
         const res = await axios.post(`${API_URL}/users/logout`, {}, {
             withCredentials: true
@@ -61,7 +62,7 @@ const logoutUser = async () => {
 // ✅ Get current user
 const getCurrentUser = async () => {
     try {
-        const res = await API.get("users/current-User", { withCredentials: true });
+        const res = await axios.get(`${API_URL}/users/current-User`, { withCredentials: true });
         console.log("GetCurrentUser Response:", res.data);
         return res.data;
     } catch (error) {
@@ -73,7 +74,7 @@ const getCurrentUser = async () => {
 // ✅ Update account details
 const updateAccountDetails = async (userData) => {
     try {
-        const res = await API.patch("users/update-Account", userData, { withCredentials: true });
+        const res = axios.patch(`${API_URL}/users/update-Account`, userData, { withCredentials: true });
         window.alert("Account details updated successfully!");
         return res.data;
     } catch (error) {
@@ -86,7 +87,7 @@ const updateAccountDetails = async (userData) => {
 // ✅ Update password
 const updatePassword = async (formData) => {
     try {
-        const res = await API.patch("users/change-Password", formData, { withCredentials: true });
+        const res = await axios.patch(`${API_URL}/users/change-Password`, formData, { withCredentials: true });
         window.alert("Password changed successfully!");
         return res.data;
     } catch (error) {
@@ -102,7 +103,7 @@ const updateProfileImage = async (imageFile) => {
         const formData = new FormData();
         formData.append("image", imageFile);
 
-        const res = await API.patch("users/update-Image", formData, {
+        const res = await  axios.patch(`${API_URL}/users/update-Image`, formData, {
             withCredentials: true,
             headers: { "Content-Type": "multipart/form-data" }
         });
@@ -117,7 +118,7 @@ const updateProfileImage = async (imageFile) => {
 
 const refreshAccessToken = async () => {
     try {
-        const res = await API.post(`users/refresh-Token`, {
+        const res = await  axios.patch(`${API_URL}/users/refresh-Token`, {
             withCredentials: true
         });
         return res.data.data.accessToken;       

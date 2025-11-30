@@ -2,54 +2,51 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { userLogout, loginSuccess } from './store/authSlice.js'
 import './App.css'
-import { Navigate, Outlet } from 'react-router-dom'
+import { useNavigate, Outlet } from 'react-router-dom'
 import { Header, Footer } from './components/index.js'
-import { getCurrentUser, refreshAccessToken } from "./services/user/authService.js"
+import { getCurrentUser } from "./services/user/authService.js"
 import { adminLoginSuccess } from "./store/adminAuthSlice.js"
 
-
 function App() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const auth = useSelector((state) => state.auth)
   const dispatch = useDispatch();
-  //console.log("auth",auth)
 
-  useEffect(() => {
-    const fetchUserData = async () => {
+  const fetchUserData = async () => {
+    try {
       const userdata = await getCurrentUser();
-      console.log("userdata", userdata)
-      if (userdata?.data.role === "admin") {
-        dispatch(adminLoginSuccess(userdata))
+      console.log("userdata", userdata);
+
+      if (userdata?.data?.role === "admin") {
+        dispatch(adminLoginSuccess(userdata.data));
       } else {
-        dispatch(loginSuccess(userdata))
+        dispatch(loginSuccess(userdata.data));
       }
-      // if (!userdata.success) {
-      //   const refreshData = await refreshAccessToken();
-      //   console.log("refreshData", refreshData)
-      //   if (refreshData.success) {
-      //     const newUserData = await getCurrentUser();
-      //     console.log("newUserData after refresh", newUserData)
-      //     if (newUserData.role === "admin") {
-      //       dispatch(adminLoginSuccess(newUserData))
-      //     } else {
-      //       dispatch(loginSuccess(newUserData))
-      //     }
-      //   } else {
-      //     dispatch(userLogout())
-      //   }
-      // }
+
+      if (userdata.success === false) {
+        console.log("No user logged in");
+        dispatch(userLogout());
+        navigate('/login');
+      }
+
+
+    } catch (error) {
+      console.log("User not logged in");
+
+    } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
     fetchUserData();
-
-  }, [])
-
-
+  }, []);
 
   if (loading) {
-    return <div className='text-center text-4xl'>Loading...</div>
+    return <div className='text-center text-4xl'>Loading...</div>;
   }
-  return !loading ? (
+
+  return (
     <div className="min-h-screen min-width-screen flex flex-wrap content-between bg-blue-100 ">
       <div className='w-full block'>
         <Header />
@@ -59,7 +56,7 @@ function App() {
         <Footer />
       </div>
     </div>
-  ) : null;
+  );
 }
 
-export default App
+export default App;
