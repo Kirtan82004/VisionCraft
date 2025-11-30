@@ -12,31 +12,34 @@ function App() {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
-  const fetchUserData = async () => {
+ const fetchUserData = async () => {
     try {
-      const userdata = await getCurrentUser();
-      console.log("userdata", userdata);
+      const response = await getCurrentUser();
+      const user = response?.data;
+      const success = response?.success;
 
-      if (userdata?.data?.role === "admin") {
-        dispatch(adminLoginSuccess(userdata.data));
-      } else {
-        dispatch(loginSuccess(userdata.data));
-      }
-
-      if (userdata.success === false) {
-        console.log("No user logged in");
+      // If API explicitly says "not logged in"
+      if (success === false || !user) {
         dispatch(userLogout());
-        navigate('/login');
+        navigate("/login");
+        return;
       }
 
-
+      // Role-based login
+      if (user.role === "admin") {
+        dispatch(adminLoginSuccess(user));
+      } else {
+        dispatch(loginSuccess(user));
+      }
     } catch (error) {
-      console.log("User not logged in");
-
+      // API failed → treat as logged out
+      dispatch(userLogout());
+      navigate("/login");
     } finally {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     fetchUserData();
