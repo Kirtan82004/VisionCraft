@@ -31,9 +31,11 @@ const loginUser = async (formData) => {
         const res = await axios.post(`${API_URL}/users/login`, formData, {
             withCredentials: true // 👈 cookies ke liye mandatory
         });
+        const { accessToken } = res.data.data;
+        localStorage.setItem("accessToken", accessToken);
         window.alert("Login successful!");
         console.log("Login Response:", res.data.data);
-        localStorage.setItem("accessToken", accessToken);
+       
 
         //localStorage.setItem("user", JSON.stringify({refreshToken:res.data.data.refreshToken})) // ✅ Login hone par localStorage me save karo
         return res.data.data;
