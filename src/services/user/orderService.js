@@ -29,7 +29,7 @@ const placeOrder = async (orderData) => {
 // Step 3: For History and Order Management
 const getOrderHistory = async () => {
     try {
-        const res = await axios.post(`${API_URL}/users/getOrderHistory`,{},{ withCredentials: true });
+        const res = await axios.get(`${API_URL}/users/getOrderHistory`,{},{ withCredentials: true });
         return res.data;
     } catch (error) {
         return error.response?.data || { success: false };
