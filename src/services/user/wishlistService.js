@@ -3,7 +3,7 @@ import API from "../../utils/axiosInstance";
 
 const getUserWishlist = async () => {
     try {
-        const res = await API.get('users/getUserWishlist');
+        const res = await API.get('users/getUserWishlist',{},{ withCredentials: true });
         return res.data;
     } catch (error) {
         return error.response.data;
