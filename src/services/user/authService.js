@@ -71,7 +71,10 @@ const getCurrentUser = async () => {
     const res = await axios.get(
       `${API_URL}/users/current-User`,
         {},
-      { withCredentials: true }
+       headers: {
+    Authorization: `Bearer ${token}`
+  }
+
     );
 
     console.log("GetCurrentUser Response:", res.data);
@@ -151,4 +154,5 @@ export {
     updateProfileImage,
     refreshAccessToken
 };
+
 
