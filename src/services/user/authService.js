@@ -70,6 +70,7 @@ const getCurrentUser = async () => {
   try {
     const res = await axios.get(
       `${API_URL}/users/current-User`,
+        {},
       { withCredentials: true }
     );
 
@@ -150,3 +151,4 @@ export {
     updateProfileImage,
     refreshAccessToken
 };
+
