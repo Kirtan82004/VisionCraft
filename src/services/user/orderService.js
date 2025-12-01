@@ -17,6 +17,7 @@ const createRazorpayOrder = async (paymentData) => {
 
 // Step 2: Save Final Order in DB After Payment is Done
 const placeOrder = async (orderData) => {
+    try{
         console.log("orderData",orderData)
         const res = await API.post('users/placeOrder', orderData);
         return res.data;
@@ -67,4 +68,5 @@ export {
     cancelOrder
 
 };
+
 
