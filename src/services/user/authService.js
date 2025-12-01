@@ -8,9 +8,7 @@ const API_URL = conf.API_URL;
 const registerUser = async (formData) => {
     console.log("formData in authService", formData)
     try {
-        const res = await axios.post(`${API_URL}/users/register`, formData, {
-            withCredentials: true // 👈 cookies ke liye mandatory
-        });
+        const res = await axios.post(`${API_URL}/users/register`, formData});
 
         if (res.data?.success) {
             window.alert("Registration successful! Logging in...");
@@ -28,9 +26,7 @@ const registerUser = async (formData) => {
 // ✅ Login user
 const loginUser = async (formData) => {
     try {
-        const res = await axios.post(`${API_URL}/users/login`, formData, {
-            withCredentials: true // 👈 cookies ke liye mandatory
-        });
+        const res = await axios.post(`${API_URL}/users/login`, formData);
         window.alert("Login successful!");
         console.log("Login Response:", res.data.data);
         const accessToken = res.data.data.accessToken;
@@ -53,9 +49,13 @@ const loginUser = async (formData) => {
 const logoutUser = async () => {
     console.log("Logging out user...");
     try {
-        const res = await axios.post(`${API_URL}/users/logout`, {}, {
-            withCredentials: true
-        });
+        const token = localStorage.getItem("accessToken");
+
+        const res = await axios.post(`${API_URL}/users/logout`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
         window.alert("User has been logged out.");
         return res.data;
     } catch (error) {
@@ -89,7 +89,13 @@ const getCurrentUser = async () => {
 // ✅ Update account details
 const updateAccountDetails = async (userData) => {
     try {
-        const res = axios.patch(`${API_URL}/users/update-Account`, userData, { withCredentials: true });
+        const token = localStorage.getItem("accessToken");
+
+        const res = axios.patch(`${API_URL}/users/update-Account`, userData, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
         window.alert("Account details updated successfully!");
         return res.data;
     } catch (error) {
@@ -102,7 +108,13 @@ const updateAccountDetails = async (userData) => {
 // ✅ Update password
 const updatePassword = async (formData) => {
     try {
-        const res = await axios.patch(`${API_URL}/users/change-Password`, formData, { withCredentials: true });
+        const token = localStorage.getItem("accessToken");
+
+        const res = await axios.patch(`${API_URL}/users/change-Password`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
         window.alert("Password changed successfully!");
         return res.data;
     } catch (error) {
@@ -115,13 +127,17 @@ const updatePassword = async (formData) => {
 // ✅ Update profile image
 const updateProfileImage = async (imageFile) => {
     try {
+        const token = localStorage.getItem("accessToken");
         const formData = new FormData();
         formData.append("image", imageFile);
 
-        const res = await axios.patch(`${API_URL}/users/update-Image`, formData, {
-            withCredentials: true,
-            headers: { "Content-Type": "multipart/form-data" }
-        });
+        const res = await axios.patch(`${API_URL}/users/update-Image`, formData,  {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data"
+        }
+      }
+);
         window.alert("Profile image updated successfully!");
         return res.data;
     } catch (error) {
@@ -133,9 +149,12 @@ const updateProfileImage = async (imageFile) => {
 
 const refreshAccessToken = async () => {
     try {
+        const token = localStorage.getItem("accessToken");
         const res = await axios.patch(`${API_URL}/users/refresh-Token`, {
-            withCredentials: true
-        });
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
         return res.data.data.accessToken;
 
     } catch (error) {
@@ -154,6 +173,7 @@ export {
     updateProfileImage,
     refreshAccessToken
 };
+
 
 
 
