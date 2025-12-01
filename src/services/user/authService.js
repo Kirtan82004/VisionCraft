@@ -8,7 +8,7 @@ const API_URL = conf.API_URL;
 const registerUser = async (formData) => {
     console.log("formData in authService", formData)
     try {
-        const res = await axios.post(`${API_URL}/users/register`, formData});
+        const res = await axios.post(`${API_URL}/users/register`, formData);
 
         if (res.data?.success) {
             window.alert("Registration successful! Logging in...");
@@ -173,6 +173,7 @@ export {
     updateProfileImage,
     refreshAccessToken
 };
+
 
 
 
