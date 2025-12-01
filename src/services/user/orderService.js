@@ -17,7 +17,6 @@ const createRazorpayOrder = async (paymentData) => {
 
 // Step 2: Save Final Order in DB After Payment is Done
 const placeOrder = async (orderData) => {
-    try {
         console.log("orderData",orderData)
         const res = await API.post('users/placeOrder', orderData);
         return res.data;
@@ -29,6 +28,7 @@ const placeOrder = async (orderData) => {
 // Step 3: For History and Order Management
 const getOrderHistory = async () => {
     try {
+        const token = localStorage.getItem("accessToken");
         const res = await axios.get(`${API_URL}/users/getOrderHistory`,  {
         headers: {
           Authorization: `Bearer ${token}`
@@ -67,3 +67,4 @@ export {
     cancelOrder
 
 };
+
