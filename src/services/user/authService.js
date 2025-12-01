@@ -68,14 +68,13 @@ const logoutUser = async () => {
 // ✅ Get current user
 const getCurrentUser = async () => {
   try {
-    const res = await axios.get(
-      `${API_URL}/users/current-User`,
-        {},
-       headers: {
-    Authorization: `Bearer ${token}`
-  }
+    const token = localStorage.getItem("accessToken");
 
-    );
+    const res = await axios.get(`${API_URL}/users/current-User`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
 
     console.log("GetCurrentUser Response:", res.data);
     return res.data;
@@ -85,6 +84,7 @@ const getCurrentUser = async () => {
     return error.response?.data || { success: false };
   }
 };
+
 
 // ✅ Update account details
 const updateAccountDetails = async (userData) => {
@@ -154,5 +154,6 @@ export {
     updateProfileImage,
     refreshAccessToken
 };
+
 
 
