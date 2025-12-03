@@ -15,12 +15,14 @@ function App() {
  const fetchUserData = async () => {
     try {
       const response = await getCurrentUser();
+      console.log("response",response)
       const user = response?.data;
       const success = response?.success;
 
        if(response?.message === "Access token expired") {
         // Try to refresh the access token
         const refreshResponse = await refreshAccessToken();
+         console.log("refreshResponse",refreshResponse)
         if(refreshResponse?.success) {
           // Retry fetching user data
           return fetchUserData();
