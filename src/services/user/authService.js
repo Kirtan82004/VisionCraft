@@ -6,7 +6,6 @@ const API_URL = conf.API_URL;
 
 // ✅ Register user
 const registerUser = async (formData) => {
-    console.log("formData in authService", formData)
     try {
         const res = await axios.post(`${API_URL}/users/register`, formData);
 
@@ -28,7 +27,6 @@ const loginUser = async (formData) => {
     try {
         const res = await axios.post(`${API_URL}/users/login`, formData);
         window.alert("Login successful!");
-        console.log("Login Response:", res.data.data);
         const accessToken = res.data.data.accessToken;
         const refreshToken = res.data.data.refreshToken;
         localStorage.setItem("accessToken", accessToken);
@@ -47,7 +45,6 @@ const loginUser = async (formData) => {
 
 // ✅ Logout user
 const logoutUser = async () => {
-    console.log("Logging out user...");
     try {
         const token = localStorage.getItem("accessToken");
 
@@ -149,14 +146,12 @@ const updateProfileImage = async (imageFile) => {
 
 const refreshAccessToken = async () => {
     try {
-        console.log("starting refresh token in service")
         const token = localStorage.getItem("refreshToken");
         const res = await axios.post(`${API_URL}/users/refresh-Token`, {},{
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
-        console.log("refresh token res",res)
         return res.data.data.accessToken;
 
     } catch (error) {
@@ -175,6 +170,7 @@ export {
     updateProfileImage,
     refreshAccessToken
 };
+
 
 
 
