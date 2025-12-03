@@ -19,7 +19,7 @@ function App() {
       const user = response?.data;
       const success = response?.success;
 
-       if(response?.message === "Access token expired") {
+       if(response?.message === "jwt expired") {
         // Try to refresh the access token
         const refreshResponse = await refreshAccessToken();
          console.log("refreshResponse",refreshResponse)
