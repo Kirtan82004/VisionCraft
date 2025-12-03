@@ -18,6 +18,20 @@ function App() {
       const user = response?.data;
       const success = response?.success;
 
+       if(response?.message === "Access token expired") {
+        // Try to refresh the access token
+        const refreshResponse = await refreshAccessToken();
+        if(refreshResponse?.success) {
+          // Retry fetching user data
+          return fetchUserData();
+        } else {
+          // Refresh token failed, log out the user
+          dispatch(userLogout());
+          navigate("/login");
+          return;
+        }
+      }
+      
       // If API explicitly says "not logged in"
       if (success === false || !user) {
         dispatch(userLogout());
