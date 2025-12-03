@@ -4,7 +4,7 @@ import { userLogout, loginSuccess } from './store/authSlice.js'
 import './App.css'
 import { useNavigate, Outlet } from 'react-router-dom'
 import { Header, Footer } from './components/index.js'
-import { getCurrentUser } from "./services/user/authService.js"
+import { getCurrentUser,refreshAccessToken } from "./services/user/authService.js"
 import { adminLoginSuccess } from "./store/adminAuthSlice.js"
 
 function App() {
