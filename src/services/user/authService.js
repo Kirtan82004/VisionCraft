@@ -149,12 +149,14 @@ const updateProfileImage = async (imageFile) => {
 
 const refreshAccessToken = async () => {
     try {
+        console.log("starting refresh token in service")
         const token = localStorage.getItem("refreshToken");
         const res = await axios.patch(`${API_URL}/users/refresh-Token`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
+        console.log("refresh token res",res)
         return res.data.data.accessToken;
 
     } catch (error) {
@@ -173,6 +175,7 @@ export {
     updateProfileImage,
     refreshAccessToken
 };
+
 
 
 
