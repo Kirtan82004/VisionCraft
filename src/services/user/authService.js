@@ -151,7 +151,7 @@ const refreshAccessToken = async () => {
     try {
         console.log("starting refresh token in service")
         const token = localStorage.getItem("refreshToken");
-        const res = await axios.post(`${API_URL}/users/refresh-Token`, {
+        const res = await axios.post(`${API_URL}/users/refresh-Token`, {},{
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -175,6 +175,7 @@ export {
     updateProfileImage,
     refreshAccessToken
 };
+
 
 
 
