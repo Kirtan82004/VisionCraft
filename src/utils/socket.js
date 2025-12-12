@@ -4,11 +4,11 @@ import conf from "../conf/conf";
 const SOCKET_URL = "https://opticalbackend-25yf.onrender.com";
 
 export const socket = io(SOCKET_URL, {
-  transports: ["websocket"],
   withCredentials: true,
   auth: {
     token: localStorage.getItem("accessToken"),
   },
-
+  transports: ["polling", "websocket"],
 });
+
 
