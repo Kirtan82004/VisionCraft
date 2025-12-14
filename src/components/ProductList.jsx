@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import { getAllProducts } from "../services/productService.js";
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -17,29 +17,36 @@ const categoryMap = {
 
 const ProductList = () => {
   const dispatch = useDispatch();
-  const { products, loading, error } = useSelector((state) => state.products);
-  console.log('Products from Redux:', products);
+  const [page, setPage] = useState(1);
+  const limit = 10;
+  const { products, loading, error, page: currentPage, pages } = useSelector((state) => state.products);
+  console.log('Products from Redux:', products,currentPage,pages);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [brandFilter, setBrandFilter] = useState('all');
   const [priceFilter, setPriceFilter] = useState('all');
   const [filterOpen, setFilterOpen] = useState(false); // Mobile accordion toggle
+  const brands = [...new Set(products.map(p => p.brand))];
 
   useEffect(() => {
     const fetchProducts = async () => {
       dispatch(fetchProductsStart());
       try {
-        const response = await getAllProducts();
-        console.log('Fetched Products:', response.data);
-        dispatch(fetchProductsSuccess(response.data));
-        dispatch(setAllProducts(response.data));
+  
+          console.log('No products in state, fetching from API');
+          const response = await getAllProducts(page, limit);
+          console.log('Fetched Products:', response.data);
+          dispatch(fetchProductsSuccess(response.data));
+          dispatch(setAllProducts(response.data));
+  
+
       } catch (err) {
         dispatch(fetchProductsFailure(err.message));
       }
     };
 
     fetchProducts();
-  }, [dispatch]);
+  }, [dispatch, page]);
 
   const filterProducts = () => {
     let filtered = [...products];
@@ -97,9 +104,8 @@ const ProductList = () => {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Filter Panel */}
         <aside
-          className={`w-full lg:w-1/4 transition-all duration-300 ease-in-out ${
-            filterOpen ? 'block' : 'hidden lg:block'
-          }`}
+          className={`w-full lg:w-1/4 transition-all duration-300 ease-in-out ${filterOpen ? 'block' : 'hidden lg:block'
+            }`}
         >
           <div className="bg-white rounded-xl shadow p-5 sticky top-20">
             <h2 className="text-xl font-semibold mb-4">Filters</h2>
@@ -136,10 +142,11 @@ const ProductList = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
               >
                 <option value="all">All</option>
-                <option value="kirtan211">Kirtan211</option>
-                <option value="oakley">Oakley</option>
-                <option value="gucci">Gucci</option>
+                {brands.map(b => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
               </select>
+
             </div>
 
             <div>
@@ -174,8 +181,26 @@ const ProductList = () => {
           )}
         </section>
       </div>
+      <div className="flex justify-center mt-6 space-x-2">
+        <button
+          disabled={page === 1}
+          onClick={() => setPage(page - 1)}
+          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+        <span className="px-4 py-2">Page {page}</span>
+        <button
+          disabled={page === products.pages}
+          onClick={() => setPage(page + 1)}
+          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };
 
 export default ProductList;
+
