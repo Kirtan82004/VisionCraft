@@ -1,26 +1,48 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { useSelector, useDispatch } from 'react-redux';
+
 import { getAllProducts } from "../services/productService.js";
 import { ProductCard, LandingPage } from "../components/index.js";
-import { motion } from "framer-motion";
+import {
+  fetchProductsStart,
+  fetchProductsSuccess,
+  fetchProductsFailure
+} from "../store/productSlice.js";
+
 
 const Home = () => {
+    const dispatch = useDispatch();
+    const { products, error } = useSelector((state) => state.products);
+    console.log('Products from Redux:', products);
+
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+
+ useEffect(() => {
     const fetchProducts = async () => {
-      try {
-        const res = await getAllProducts();
-        setPosts(res.data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
+      if(products.length > 0){
+        console.log('Using products from Redux state');
+        setPosts(products);
         setLoading(false);
+        return;
+      }
+      dispatch(fetchProductsStart());
+      try {
+        console.log('No products in state, fetching from API');
+        const response = await getAllProducts();
+        console.log('Fetched Products:', response.data);
+        dispatch(fetchProductsSuccess(response.data));
+        setPosts(response.data);
+        setLoading(false);
+      } catch (err) {
+        dispatch(fetchProductsFailure(err.message));
       }
     };
 
     fetchProducts();
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="bg-linear-to-b from-white via-blue-50 to-blue-100 min-h-screen">
@@ -56,7 +78,7 @@ const Home = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-3xl sm:text-4xl font-extrabold mb-8 text-center bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent"
+          className="text-3xl sm:text-4xl font-extrabold mb-8 text-center bg-linear-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent"
         >
           Our Products
         </motion.h1>
