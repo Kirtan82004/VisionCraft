@@ -32,7 +32,7 @@ const Home = () => {
       try {
         console.log('No products in state, fetching from API');
         const response = await getAllProducts();
-        console.log('Fetched Products:', response.data);
+        console.log('Fetched Products:', response.data.data);
         dispatch(fetchProductsSuccess(response.data));
         setPosts(response.data);
         setLoading(false);
@@ -160,3 +160,4 @@ const Home = () => {
 };
 
 export default Home;
+
