@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useSelector, useDispatch } from 'react-redux';
 
 import { getAllProducts } from "../services/productService.js";
-const LandingPage = React.lazy(() => import("../components/LandingPage"));
+const LandingPage = React.lazy(() => import("../components/LandinPage"));
 const ProductCard = React.lazy(() => import("../components/ProductCard"));
 import {
   fetchProductsStart,
@@ -151,6 +151,7 @@ const Home = () => {
 };
 
 export default Home;
+
 
 
 
