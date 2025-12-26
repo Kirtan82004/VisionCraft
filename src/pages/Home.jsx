@@ -13,36 +13,27 @@ import {
 
 const Home = () => {
     const dispatch = useDispatch();
-    const { products, error } = useSelector((state) => state.products);
+    const { products, error, loading } = useSelector((state) => state.products);
     console.log('Products from Redux:', products);
-
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
 
 
  useEffect(() => {
     const fetchProducts = async () => {
-      if(products.length > 0){
-        console.log('Using products from Redux state');
-        setPosts(products);
-        setLoading(false);
-        return;
-      }
       dispatch(fetchProductsStart());
       try {
+        if (products.length === 0) {
         console.log('No products in state, fetching from API');
         const response = await getAllProducts();
         console.log('Fetched Products:', response.data.data);
         dispatch(fetchProductsSuccess(response.data));
-        setPosts(response.data.data);
-        setLoading(false);
+        }
       } catch (err) {
         dispatch(fetchProductsFailure(err.message));
       }
     };
 
     fetchProducts();
-  }, [dispatch]);
+  }, [dispatch,products]);
 
   return (
     <div className="bg-linear-to-b from-white via-blue-50 to-blue-100 min-h-screen">
@@ -98,7 +89,7 @@ const Home = () => {
             }}
             className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
           >
-            {posts.map((product) => (
+            {products.map((product) => (
               <motion.div
                 key={product._id}
                 variants={{
@@ -160,5 +151,6 @@ const Home = () => {
 };
 
 export default Home;
+
 
 
