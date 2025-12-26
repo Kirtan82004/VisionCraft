@@ -76,7 +76,7 @@ const Home = () => {
 
         {loading ? (
           <p className="text-center text-gray-500">Loading products...</p>
-        ) : posts.length > 0 ? (
+        ) : products.length > 0 ? (
           <motion.div
             initial="hidden"
             animate="show"
@@ -151,6 +151,7 @@ const Home = () => {
 };
 
 export default Home;
+
 
 
 
