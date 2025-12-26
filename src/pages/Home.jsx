@@ -16,8 +16,7 @@ const Home = () => {
     const dispatch = useDispatch();
     const { products, error, loading } = useSelector((state) => state.products);
     console.log('Products from Redux:', products);
-
-
+    console.log('loading',loading);
  useEffect(() => {
     const fetchProducts = async () => {
       dispatch(fetchProductsStart());
@@ -152,6 +151,7 @@ const Home = () => {
 };
 
 export default Home;
+
 
 
 
