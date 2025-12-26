@@ -14,19 +14,15 @@ import {
 const Home = () => {
     const dispatch = useDispatch();
     const { products, error, loading } = useSelector((state) => state.products);
-    console.log('Products from Redux:', products);
-    console.log('loading',loading);
+  
  useEffect(() => {
     const fetchProducts = async () => {
       try {
         if (products.length === 0) {
           dispatch(fetchProductsStart());
-      console.log('loading Star',loading);
-        console.log('No products in state, fetching from API');
         const response = await getAllProducts();
         console.log('Fetched Products:', response.data.data);
         dispatch(fetchProductsSuccess(response.data));
-          console.log('loading Success',loading);
         }
       } catch (err) {
         dispatch(fetchProductsFailure(err.message));
@@ -152,6 +148,7 @@ const Home = () => {
 };
 
 export default Home;
+
 
 
 
