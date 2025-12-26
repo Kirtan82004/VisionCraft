@@ -34,7 +34,7 @@ const Home = () => {
         const response = await getAllProducts();
         console.log('Fetched Products:', response.data.data);
         dispatch(fetchProductsSuccess(response.data));
-        setPosts(response.data);
+        setPosts(response.data.data);
         setLoading(false);
       } catch (err) {
         dispatch(fetchProductsFailure(err.message));
@@ -160,4 +160,5 @@ const Home = () => {
 };
 
 export default Home;
+
 
