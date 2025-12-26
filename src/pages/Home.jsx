@@ -21,7 +21,6 @@ const Home = () => {
         if (products.length === 0) {
           dispatch(fetchProductsStart());
         const response = await getAllProducts();
-        console.log('Fetched Products:', response.data.data);
         dispatch(fetchProductsSuccess(response.data));
         }
       } catch (err) {
@@ -148,6 +147,7 @@ const Home = () => {
 };
 
 export default Home;
+
 
 
 
