@@ -20,7 +20,7 @@ function App() {
       const user = response?.data;
       const success = response?.success;
 
-      if(response?.message === "Access token expired") {
+      if(response?.message === "jwt expired") {
         // Try to refresh the access token
         const refreshResponse = await refreshAccessToken();
         if(refreshResponse?.success) {
@@ -61,8 +61,10 @@ function App() {
     fetchUserData();
   }, []);
 
-  if (loading) {
-    return <div className='text-center text-4xl'>Loading...</div>;
+   if (loading) {
+    return <div className="flex justify-center items-center h-screen">
+      <span className="loader"></span>
+    </div>;
   }
 
   return (
@@ -79,3 +81,4 @@ function App() {
 }
 
 export default App;
+
