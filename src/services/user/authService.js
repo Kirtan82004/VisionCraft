@@ -32,9 +32,6 @@ const loginUser = async (formData) => {
         const refreshToken = res.data.data.refreshToken;
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
-
-
-        //localStorage.setItem("user", JSON.stringify({refreshToken:res.data.data.refreshToken})) // ✅ Login hone par localStorage me save karo
         return res.data.data;
     } catch (error) {
         console.error("Login Error:", error);
@@ -142,7 +139,7 @@ const updateProfileImage = async (imageFile) => {
 
 const refreshAccessToken = async () => {
     try {
-        const res = await axios.patch(`${API_URL}/users/refresh-Token`,{}, {
+        const res = await axios.post(`${API_URL}/users/refresh-Token`,{}, {
             withCredentials: true,
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("refreshToken")}`
@@ -165,4 +162,5 @@ export {
     updatePassword,
     updateProfileImage,
     refreshAccessToken
+
 };
