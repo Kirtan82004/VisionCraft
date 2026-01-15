@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../services/user/authService';
-import { adminLoginSuccess, adminLoginFailure, adminLoginStart } from '../../store/adminAuthSlice.js';
+import { adminLoginSuccess, adminLoginFailure, adminLoginStart } from '../../store/admin/adminAuthSlice.js';
 import { loginStart, loginSuccess, loginFailure } from '../../store/authSlice';
 import Input from '../Input';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +18,6 @@ const Login = () => {
     email: '',
     password: '',
   });
-
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
@@ -27,51 +26,61 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     try {
       dispatch(loginStart());
       dispatch(adminLoginStart());
+
       const response = await loginUser(formData);
-      console.log("response", response);
       const user = response?.user;
+      if (!user) throw new Error('Invalid credentials');
 
-
-      if (!user) throw new Error("Invalid user response");
-
-      if (user.role === "admin") {
+      if (user.role === 'admin') {
         dispatch(adminLoginSuccess(user));
-        showAlert("success", "Admin login successful!");
-        navigate("/admin/dashboard");
+        showAlert('success', 'Admin login successful!');
+        navigate('/admin/dashboard');
       } else {
         dispatch(loginSuccess(user));
-        showAlert("success", "Login successful!");
-        navigate("/");
+        showAlert('success', 'Login successful!');
+        navigate('/');
       }
-
     } catch (err) {
-      const message = err?.message || "Login failed";
-
+      const message = err?.message || 'Login failed';
       dispatch(loginFailure(message));
       dispatch(adminLoginFailure(message));
-
-      // ✅ Show error alert
-      showAlert("error", message);
+      showAlert('error', message);
     }
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-emerald-100 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-emerald-100 p-8 md:p-10">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-linear-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <span className="text-2xl text-white">🔐</span>
-          </div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h2>
-          <p className="text-gray-500">Sign in to your account to continue</p>
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-emerald-50">
+      
+      {/* LEFT BRAND SECTION */}
+      <div className="hidden lg:flex flex-col justify-center px-16 bg-linear-to-br from-emerald-600 to-emerald-500 text-white">
+        <h1 className="text-4xl font-bold mb-4">Welcome Back 👋</h1>
+        <p className="text-lg text-emerald-100 leading-relaxed">
+          Login to manage your dashboard, track activities, and control everything from one place.
+        </p>
+        <div className="mt-10 text-sm opacity-80">
+          © 2026 Your Company. All rights reserved.
         </div>
+      </div>
 
-        <form onSubmit={handleLogin} className="space-y-6">
-          <div>
+      {/* RIGHT FORM SECTION */}
+      <div className="flex items-center justify-center px-4">
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 md:p-10">
+          
+          <div className="text-center mb-8">
+            <div className="w-14 h-14 mx-auto rounded-xl bg-emerald-100 flex items-center justify-center mb-4">
+              <span className="text-2xl">🔐</span>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800">Sign In</h2>
+            <p className="text-gray-500 text-sm mt-1">
+              Enter your credentials to continue
+            </p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-5">
+
             <Input
               label="Email Address"
               type="email"
@@ -79,61 +88,47 @@ const Login = () => {
               placeholder="you@example.com"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200"
             />
-          </div>
 
-          <div className="relative">
-            <Input
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
-              name="password"
-              placeholder="••••••••"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-9 text-gray-400 hover:text-gray-600 transition-colors duration-200"
-            >
-              {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
-            </button>
-          </div>
-
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4">
-              <p className="text-sm text-red-600 flex items-center gap-2">
-                <span className="text-red-500">⚠️</span>
-                {error}
-              </p>
+            <div className="relative">
+              <Input
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleChange}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-[42px] text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </button>
             </div>
-          )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-linear-to-br from-emerald-500 to-emerald-600 text-white font-semibold py-3 px-6 rounded-xl hover:from-emerald-600 hover:to-emerald-700 focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
-          >
-            {loading ? (
-              <div className="flex items-center justify-center gap-2">
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                Signing in...
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-2">
+                ⚠️ {error}
               </div>
-            ) : (
-              'Sign In'
             )}
-          </button>
-        </form>
 
-        <div className="mt-8 text-center">
-          <p className="text-gray-500 text-sm">
-            Don't have an account?{' '}
-            <button className="text-emerald-600 hover:text-emerald-700 font-medium hover:underline">
-              Sign up here
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-semibold transition disabled:opacity-50"
+            >
+              {loading ? 'Signing in...' : 'Sign In'}
             </button>
-          </p>
+          </form>
+
+          <div className="mt-6 text-center text-sm text-gray-500">
+            Don’t have an account?{' '}
+            <span onClick={() => navigate("/signup")} className="text-emerald-600 font-medium cursor-pointer hover:underline">
+              Sign up
+            </span>
+          </div>
         </div>
       </div>
     </div>

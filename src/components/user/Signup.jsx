@@ -1,20 +1,20 @@
-//  Enhanced with modern UI design and semantic tokens
 "use client"
 
 import { useState } from "react"
 import { Input } from "../index.js"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { signupStart, signupSuccess, signupFailure } from "../../store/authSlice"
+import { signupStart, signupSuccess, signupFailure, loginSuccess } from "../../store/authSlice"
 import { registerUser } from "../../services/user/authService"
 import { FiEye, FiEyeOff, FiUser, FiMail, FiPhone, FiMapPin } from "react-icons/fi"
 
 const UserSignup = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { loading, error } = useSelector((state) => state.auth)
+
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const { loading, error } = useSelector((state) => state.auth)
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -31,180 +31,137 @@ const UserSignup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault()
+
     if (formData.password !== formData.confirmPassword) {
-      return alert("Passwords don't match")
+      dispatch(signupFailure("Passwords do not match"))
+      return
     }
+
     dispatch(signupStart())
 
     try {
-      const response = await registerUser(formData)
-      dispatch(signupSuccess(response.data.user))
-      dispatch(loginSuccess(response.data.user))
+      const res = await registerUser(formData)
+      dispatch(signupSuccess(res.data.user))
+      dispatch(loginSuccess(res.data.user))
       navigate("/")
     } catch (err) {
-      dispatch(signupFailure(err.message))
+      dispatch(signupFailure(err.message || "Signup failed"))
     }
   }
 
   return (
-    <div className="min-h-screenbg-linear-to-br from-emerald-50 via-white to-teal-50 flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md">
-        {/* Header */}
+    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-teal-50 flex items-center justify-center mt-20">
+      <div className="w-full max-w-lg">
+
+        {/* HEADER */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-linear-to-br from-emerald-600 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <FiUser size={24} className="text-white" />
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-linear-to-br from-emerald-600 to-teal-600 flex items-center justify-center shadow-lg mb-4">
+            <FiUser className="text-white text-2xl" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h2>
-          <p className="text-gray-600">Join us and start your journey today</p>
+          <h2 className="text-3xl font-bold text-gray-900">Create Account</h2>
+          <p className="text-gray-600 mt-1">Start your journey with us</p>
         </div>
 
-        {/* Form */}
+        {/* CARD */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-              {error}
+            <div className="mb-6 bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-lg">
+              ⚠️ {error}
             </div>
           )}
 
           <form onSubmit={handleSignup} className="space-y-5">
-            {/* Full Name */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-2">Full Name</label>
-              <div className="relative">
-                <Input
-                  type="text"
-                  name="fullName"
-                  placeholder="John Doe"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
-                />
-                <FiUser size={18} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              </div>
-            </div>
 
-            {/* Email */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-2">Email Address</label>
-              <div className="relative">
-                <Input
-                  type="email"
-                  name="email"
-                  placeholder="john@example.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
-                />
-                <FiMail size={18} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              </div>
-            </div>
+            {/* FULL NAME */}
+            <Field icon={<FiUser />} label="Full Name">
+              <Input name="fullName" value={formData.fullName} onChange={handleChange} placeholder="John Doe" />
+            </Field>
 
-            {/* Phone Number */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-2">Phone Number</label>
-              <div className="relative">
-                <Input
-                  type="tel"
-                  name="phoneNo"
-                  placeholder="1234567890"
-                  value={formData.phoneNo}
-                  onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
-                />
-                <FiPhone size={18} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              </div>
-            </div>
+            {/* EMAIL */}
+            <Field icon={<FiMail />} label="Email Address">
+              <Input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="john@example.com" />
+            </Field>
 
-            {/* Address */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-2">Address</label>
-              <div className="relative">
-                <Input
-                  type="text"
-                  name="address"
-                  placeholder="123 Main Street"
-                  value={formData.address}
-                  onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
-                />
-                <FiMapPin size={18} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              </div>
-            </div>
+            {/* PHONE */}
+            <Field icon={<FiPhone />} label="Phone Number">
+              <Input name="phoneNo" value={formData.phoneNo} onChange={handleChange} placeholder="987654xxxx" />
+            </Field>
 
-            {/* Password */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-2">Password</label>
-              <div className="relative">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  placeholder="••••••••"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors"
-                >
-                  {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
-                </button>
-              </div>
-            </div>
+            {/* ADDRESS */}
+            <Field icon={<FiMapPin />} label="Address">
+              <Input name="address" value={formData.address} onChange={handleChange} placeholder="123 Main Street" />
+            </Field>
 
-            {/* Confirm Password */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-2">Confirm Password</label>
-              <div className="relative">
-                <Input
-                  type={showConfirmPassword ? "text" : "password"}
-                  name="confirmPassword"
-                  placeholder="••••••••"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword((prev) => !prev)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors"
-                >
-                  {showConfirmPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
-                </button>
-              </div>
-            </div>
+            {/* PASSWORD */}
+            <PasswordField
+              label="Password"
+              value={formData.password}
+              onChange={handleChange}
+              name="password"
+              show={showPassword}
+              toggle={() => setShowPassword(!showPassword)}
+            />
 
-            {/* Submit Button */}
+            {/* CONFIRM PASSWORD */}
+            <PasswordField
+              label="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              name="confirmPassword"
+              show={showConfirmPassword}
+              toggle={() => setShowConfirmPassword(!showConfirmPassword)}
+            />
+
+            {/* SUBMIT */}
             <button
-              type="submit"
               disabled={loading}
-              className="w-full bg-linear-to-r from-emerald-600 to-teal-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-emerald-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full bg-linear-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-xl font-semibold hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50"
             >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  Creating Account...
-                </span>
-              ) : (
-                "Create Account"
-              )}
+              {loading ? "Creating Account..." : "Create Account"}
             </button>
           </form>
 
-          {/* Footer */}
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">
-              Already have an account?{' '}
-              <button className="text-emerald-600 hover:text-emerald-700 font-medium hover:underline transition-colors">
-                Sign in
-              </button>
-            </p>
-          </div>
+          {/* FOOTER */}
+          <p className="text-center text-sm text-gray-600 mt-6">
+            Already have an account?{" "}
+            <span onClick={()=>navigate("/login")} className="text-emerald-600 hover:underline cursor-pointer">
+              Sign in
+            </span>
+          </p>
         </div>
       </div>
     </div>
   )
 }
+
+/* Reusable Components */
+const Field = ({ label, icon, children }) => (
+  <div>
+    <label className="block text-gray-700 font-medium mb-2">{label}</label>
+    <div className="relative">
+      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+        {icon}
+      </span>
+      {children}
+    </div>
+  </div>
+)
+
+const PasswordField = ({ label, show, toggle, ...props }) => (
+  <div>
+    <label className="block text-gray-700 font-medium mb-2">{label}</label>
+    <div className="relative">
+      <Input
+        {...props}
+        type={show ? "text" : "password"}
+        className="pl-4 pr-12"
+      />
+      <button type="button" onClick={toggle} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
+        {show ? <FiEyeOff /> : <FiEye />}
+      </button>
+    </div>
+  </div>
+)
 
 export default UserSignup

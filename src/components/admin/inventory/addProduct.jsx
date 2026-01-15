@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../../services/admin/productService";
+
+const inputStyle =
+  "w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none";
 
 const AddProduct = () => {
   const navigate = useNavigate();
@@ -18,97 +21,113 @@ const AddProduct = () => {
 
   const [imagePreview, setImagePreview] = useState([]);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  /* -------------------- Handlers -------------------- */
 
-  const handleImageUpload = (e) => {
+  const handleChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  }, []);
+
+  const handleImageUpload = useCallback((e) => {
     const files = Array.from(e.target.files);
-    setForm({ ...form, images: files });
+    setForm((prev) => ({ ...prev, images: files }));
 
     const previews = files.map((file) => URL.createObjectURL(file));
     setImagePreview(previews);
-  };
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      imagePreview.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [imagePreview]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const fd = new FormData();
-    Object.keys(form).forEach((key) => {
-      if (key === "images") {
-        form.images.forEach((img) => fd.append("images", img));
-      } else {
-        fd.append(key, form[key]);
-      }
-    });
+    try {
+      const fd = new FormData();
 
-    const data = await createProduct(fd);
+      Object.entries(form).forEach(([key, value]) => {
+        if (key === "images") {
+          value.forEach((img) => fd.append("images", img));
+        } else {
+          fd.append(key, value);
+        }
+      });
 
-    setIsLoading(false);
-
-    console.log("NewProductData", data);
-    navigate("/admin/inventory");
+      await createProduct(fd);
+      navigate("/admin/inventory");
+    } catch (error) {
+      console.error("Add Product Error:", error);
+      alert("Failed to add product");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  /* -------------------- UI -------------------- */
+
   return (
-    <div className="lg:ml-64 p-6 bg-gray-50 min-h-screen">
+    <div className="lg:ml-64 p-6 bg-gray-100 min-h-screen relative">
 
-      {/* ✅ Loading Screen */}
-    {isLoading && (
-          <div className="absolute inset-0 bg-white bg-opacity-70 flex justify-center items-center rounded">
-            <div className="text-gray-600 text-lg font-medium">
-              Adding Product...
-            </div>
+      {/* Loading Overlay */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-white/70 flex items-center justify-center z-50">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-600 border-t-transparent"></div>
+        </div>
+      )}
+
+      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">
+          ➕ Add New Product
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+
+          {/* Product Info */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              type="text"
+              name="name"
+              placeholder="Product Name"
+              value={form.name}
+              onChange={handleChange}
+              className={inputStyle}
+              required
+            />
+
+            <input
+              type="text"
+              name="brand"
+              placeholder="Brand"
+              value={form.brand}
+              onChange={handleChange}
+              className={inputStyle}
+              required
+            />
           </div>
-        )}
 
-      <div className="bg-white p-6 rounded shadow max-w-3xl mx-auto">
-        <h2 className="text-2xl font-bold mb-6">Add New Product</h2>
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-
-          {/* Name */}
-          <input
-            type="text"
-            name="name"
-            placeholder="Product Name"
-            value={form.name}
-            onChange={handleChange}
-            className="w-full border p-3 rounded"
-            required
-          />
-
-          {/* Brand */}
-          <input
-            type="text"
-            name="brand"
-            placeholder="Brand"
-            value={form.brand}
-            onChange={handleChange}
-            className="w-full border p-3 rounded"
-            required
-          />
-
-          {/* Price + Stock */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Price & Stock */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
               type="number"
               name="price"
               placeholder="Price"
               value={form.price}
               onChange={handleChange}
-              className="w-full border p-3 rounded"
+              className={inputStyle}
               required
             />
 
             <input
               type="number"
               name="stock"
-              placeholder="Stock"
+              placeholder="Stock Quantity"
               value={form.stock}
               onChange={handleChange}
-              className="w-full border p-3 rounded"
+              className={inputStyle}
               required
             />
           </div>
@@ -118,7 +137,7 @@ const AddProduct = () => {
             name="category"
             value={form.category}
             onChange={handleChange}
-            className="w-full border p-3 rounded"
+            className={inputStyle}
             required
           >
             <option value="">Select Category</option>
@@ -132,43 +151,47 @@ const AddProduct = () => {
           {/* Description */}
           <textarea
             name="description"
-            placeholder="Description"
+            placeholder="Product Description"
             value={form.description}
             onChange={handleChange}
-            className="w-full border p-3 rounded h-28"
+            className={`${inputStyle} h-32`}
             required
           />
 
-          {/* Images */}
+          {/* Image Upload */}
           <div>
-            <label className="font-semibold">Upload Images</label>
+            <label className="block font-medium text-gray-700 mb-2">
+              Product Images
+            </label>
             <input
               type="file"
               multiple
               accept="image/*"
               onChange={handleImageUpload}
-              className="w-full border p-3 rounded mt-2"
+              className={inputStyle}
             />
 
-            {/* Preview */}
-            <div className="flex gap-3 mt-3 flex-wrap">
-              {imagePreview.map((img, i) => (
-                <img
-                  key={i}
-                  src={img}
-                  alt="preview"
-                  className="w-24 h-24 object-cover rounded border"
-                />
-              ))}
-            </div>
+            {imagePreview.length > 0 && (
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 mt-4">
+                {imagePreview.map((img, i) => (
+                  <img
+                    key={i}
+                    src={img}
+                    alt="preview"
+                    className="w-full h-24 object-cover rounded-lg border"
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Submit */}
           <button
             type="submit"
-            className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg w-full"
+            disabled={isLoading}
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg transition disabled:opacity-50"
           >
-            Add Product
+            {isLoading ? "Adding Product..." : "Add Product"}
           </button>
 
         </form>

@@ -5,7 +5,7 @@ import { socket } from "./socket.js";
 // import realtime reducers from slices
 import { productAddedRealtime, productUpdatedRealtime, productDeletedRealtime } from "../store/productSlice.js";
 import { orderPlacedRealtime, orderCancelledRealtime } from "../store/orderSlice.js";
-import { addOrderRealtime, cancelOrderRealtime } from "../store/adminOrederManagmentSlice.js";
+import { addOrderRealtime, cancelOrderRealtime } from "../store/admin/adminOrederManagmentSlice.js";
 import { cartUpdatedRealtime, cartClearedRealtime } from "../store/cartSlice.js";
 import { wishlistUpdatedRealtime, wishlistClearedRealtime } from "../store/wishlistSlice.js";
 import { reviewAddedRealtime, reviewUpdatedRealtime, reviewDeletedRealtime } from "../store/reviewSlice.js";

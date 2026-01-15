@@ -1,78 +1,95 @@
-
 import React from "react";
 
 const termsData = [
   {
     title: "Acceptance of Terms",
     description:
-      "By accessing this website, we assume you accept these terms and conditions in full. Do not continue to use Optical Store's website if you do not accept all of the terms and conditions stated on this page.",
+      "By accessing this website, you agree to be bound by these Terms and Conditions. If you do not agree with any part of these terms, please discontinue using Optical Store.",
   },
   {
     title: "Intellectual Property Rights",
     description:
-      "Unless otherwise stated, Optical Store and/or its licensors own the intellectual property rights for all material on this website. All intellectual property rights are reserved. You may view and/or print pages from this website for your own personal use subject to restrictions set in these terms and conditions.",
+      "All content on this website is the property of Optical Store unless otherwise stated. You may use material for personal purposes only, subject to the restrictions outlined in these terms.",
   },
   {
     title: "Restrictions",
-    description: "You are specifically restricted from all of the following:",
+    description: "You are specifically restricted from the following activities:",
     list: [
-      "Publishing any website material in any other media",
-      "Selling, sublicensing, and/or otherwise commercializing any website material",
-      "Publicly performing and/or showing any website material",
-      "Using this website in any way that is or may be damaging to this website",
-      "Using this website contrary to applicable laws and regulations",
-      "Engaging in any data mining, data harvesting, or similar activity",
-      "Using this website to engage in any advertising or marketing",
+      "Publishing website material in other media",
+      "Selling or sublicensing website material",
+      "Public display or performance of website content",
+      "Using the website in any way that may cause damage",
+      "Using the website contrary to applicable laws",
+      "Engaging in data mining or data harvesting",
+      "Using the website for advertising or marketing",
     ],
   },
   {
     title: "Limitation of Liability",
     description:
-      "In no event shall Optical Store, nor any of its officers, directors, and employees, be held liable for anything arising out of or in any way connected with your use of this website.",
+      "Optical Store shall not be held responsible for any damages arising from your use or inability to use the website.",
   },
   {
     title: "Indemnification",
     description:
-      "You hereby indemnify to the fullest extent Optical Store from and against any liabilities, costs, demands, damages, and expenses arising from your breach of these terms.",
+      "You agree to indemnify Optical Store against any losses, liabilities, or expenses resulting from your breach of these terms.",
   },
   {
     title: "Governing Law & Jurisdiction",
     description:
-      "These terms will be governed by and interpreted in accordance with the laws of [Your State], and you submit to the jurisdiction of the courts in [Your State] for dispute resolution.",
+      "These terms are governed by the laws of your local jurisdiction, and any disputes will be resolved in its courts.",
   },
 ];
 
 const TermsAndConditions = () => {
   return (
-    <section className="bg-gradient-to-b from-gray-50 to-white py-12 px-4 sm:px-6 lg:px-8 mt-20 mb-20">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-8 text-center">
-          Terms & Conditions
-        </h1>
+    <main className="bg-gray-50">
 
-        {termsData.map((term, index) => (
-          <div
-            key={index}
-            className="mb-8 border-l-4 border-blue-500 pl-4 bg-white shadow-sm rounded-md p-4 transition duration-200 hover:shadow-md"
-          >
-            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
-              {term.title}
-            </h2>
-            <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-2">
-              {term.description}
-            </p>
+      {/* HERO */}
+      <section className="bg-linear-to-br from-emerald-600 to-teal-600 py-20 px-4 text-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl sm:text-5xl font-bold mb-4">
+            Terms & Conditions
+          </h1>
+          <p className="text-emerald-100 text-lg">
+            Please read these terms carefully before using our services
+          </p>
+        </div>
+      </section>
 
-            {term.list && (
-              <ul className="list-disc list-inside text-gray-700 text-sm sm:text-base space-y-1">
-                {term.list.map((item, idx) => (
-                  <li key={idx}>{item}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-        ))}
-      </div>
-    </section>
+      {/* CONTENT */}
+      <section className="max-w-4xl mx-auto px-4 py-16">
+        <div className="space-y-8">
+          {termsData.map((term, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-2xl shadow-md border border-gray-100 p-8 hover:shadow-lg transition"
+            >
+              <h2 className="text-2xl font-semibold text-gray-900 mb-3">
+                {term.title}
+              </h2>
+
+              <p className="text-gray-700 leading-relaxed mb-4">
+                {term.description}
+              </p>
+
+              {term.list && (
+                <ul className="space-y-2 list-disc list-inside text-gray-700">
+                  {term.list.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* FOOTER NOTE */}
+        <p className="text-center text-sm text-gray-500 mt-12">
+          Last updated: January 2026
+        </p>
+      </section>
+    </main>
   );
 };
 

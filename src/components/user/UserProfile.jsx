@@ -57,7 +57,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchOrderHistory = async () => {
       const res = await getOrderHistory();
-      
+
       setOrders(res.orders);
     };
     fetchOrderHistory();
@@ -78,39 +78,41 @@ const Profile = () => {
   console.log("orders", orders)
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6 mt-16 sm:mt-20">
-      {/* Profile Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg shadow-lg p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        {/* User Info */}
-        <div className="flex items-center gap-4">
+    <div className="max-w-7xl mx-auto px-4 py-8 mt-16 sm:mt-20 space-y-8">
+
+      {/* PROFILE HEADER */}
+      <div className="relative bg-linear-to-r from-blue-600 to-indigo-600 rounded-3xl shadow-xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-white">
+
+        <div className="flex items-center gap-5">
           <img
-            alt={`Profile of ${user.fullName}`}
-            className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white shadow-md object-cover"
-            src={user.image || "https://placehold.co/100x100"}
+            src={user.image || "https://placehold.co/120x120"}
+            alt={user.fullName}
+            className="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover"
           />
+
           <div>
-            <h2 className="text-xl sm:text-2xl font-semibold">
+            <h2 className="text-2xl sm:text-3xl font-bold">
               {user.fullName}
             </h2>
             <p className="text-blue-100 text-sm">{user.email}</p>
           </div>
         </div>
 
-        {/* Edit Button */}
         <button
-          className="bg-white text-blue-600 font-semibold px-4 py-2 rounded-lg shadow hover:bg-gray-100 transition text-sm sm:text-base"
           onClick={() => navigate("/edit-profile")}
+          className="bg-white text-blue-600 font-semibold px-6 py-2 rounded-xl shadow hover:bg-blue-50 transition"
         >
           Edit Profile
         </button>
       </div>
 
-      {/* Personal Info */}
-      <section className="bg-white rounded-lg shadow-md p-4 sm:p-6 mt-6">
-        <h3 className="text-lg sm:text-xl font-semibold mb-4">
-          Personal Information
+      {/* PERSONAL INFO */}
+      <section className="bg-white rounded-3xl shadow-md p-6 sm:p-8">
+        <h3 className="text-xl font-semibold mb-6 flex items-center gap-2">
+          👤 Personal Information
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <InfoField label="Full Name" value={user.fullName} />
           <InfoField label="Email" value={user.email} />
           <InfoField label="Phone" value={user.phoneNo || "N/A"} />
@@ -118,22 +120,24 @@ const Profile = () => {
         </div>
       </section>
 
-      {/* Order History */}
-      <section className="bg-white rounded-lg shadow-md p-4 sm:p-6 mt-6">
-        <h3 className="text-lg sm:text-xl font-semibold mb-4">
-          Order History
+      {/* ORDER HISTORY */}
+      <section className="bg-white rounded-3xl shadow-md p-6 sm:p-8">
+        <h3 className="text-xl font-semibold mb-6 flex items-center gap-2">
+          📦 Order History
         </h3>
+
         <div className="overflow-x-auto">
-          <table className="min-w-full text-xs sm:text-sm border-collapse">
+          <table className="min-w-full text-sm">
             <thead>
-              <tr className="text-left text-gray-600 border-b">
-                <th className="py-2 px-2 sm:px-4">Order ID</th>
-                <th className="py-2 px-2 sm:px-4">Date</th>
-                <th className="py-2 px-2 sm:px-4">Status</th>
-                <th className="py-2 px-2 sm:px-4">Total</th>
-                <th className="py-2 px-2 sm:px-4"></th>
+              <tr className="text-gray-500 border-b">
+                <th className="py-3 px-4 text-left">Order ID</th>
+                <th className="py-3 px-4 text-left">Date</th>
+                <th className="py-3 px-4 text-left">Status</th>
+                <th className="py-3 px-4 text-left">Total</th>
+                <th className="py-3 px-4"></th>
               </tr>
             </thead>
+
             <tbody>
               {orders.length > 0 ? (
                 orders.map((order) => (
@@ -141,29 +145,37 @@ const Profile = () => {
                     key={order._id}
                     className="border-b hover:bg-gray-50 transition"
                   >
-                    <td className="py-2 px-2 sm:px-4">{order._id}</td>
-                    <td className="py-2 px-2 sm:px-4">
+                    <td className="py-3 px-4 font-medium">
+                      #{order._id.slice(-6)}
+                    </td>
+                    <td className="py-3 px-4">
                       {new Date(order.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="py-2 px-2 sm:px-4">{order.orderStatus}</td>
-                    <td className="py-2 px-2 sm:px-4">
-                      ${order.orderTotal}
+                    <td className="py-3 px-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold
+                      ${order.orderStatus === "Delivered"
+                          ? "bg-green-100 text-green-600"
+                          : "bg-yellow-100 text-yellow-600"
+                        }`}
+                      >
+                        {order.orderStatus}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 font-semibold">
+                      ₹{order.orderTotal}
                     </td>
                     <td
                       onClick={() => navigate(`/orderDetails/${order._id}`)}
-                      className="py-2 px-2 sm:px-4 text-blue-600 cursor-pointer hover:underline"
+                      className="py-3 px-4 text-blue-600 cursor-pointer hover:underline"
                     >
-                      Details
+                      View
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td
-                    colSpan="5"
-                    className="text-center text-gray-500 py-4"
-                  >
-                    No orders found.
+                  <td colSpan="5" className="text-center text-gray-500 py-6">
+                    No orders found
                   </td>
                 </tr>
               )}
@@ -172,52 +184,54 @@ const Profile = () => {
         </div>
       </section>
 
-      {/* Saved Items */}
-      <section className="mt-6">
-        <h3 className="text-lg sm:text-xl font-semibold mb-4">Saved Items</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      {/* SAVED ITEMS */}
+      <section>
+        <h3 className="text-xl font-semibold mb-6 flex items-center gap-2">
+          ❤️ Saved Items
+        </h3>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {savedItems.length > 0 ? (
             savedItems.map((item) => (
               <div
                 key={item._id}
-                className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col hover:shadow-lg transition"
+                className="bg-white rounded-3xl shadow-md overflow-hidden hover:shadow-xl transition group"
               >
                 <img
-                  alt={item.name}
-                  className="w-full h-40 sm:h-48 object-cover"
                   src={item.image || "https://placehold.co/600x400"}
+                  alt={item.name}
+                  className="h-48 w-full object-cover group-hover:scale-105 transition duration-300"
                 />
-                <div className="p-4 flex flex-col flex-grow justify-between">
-                  <div>
-                    <h4 className="text-base sm:text-lg font-semibold">
-                      {item.name}
-                    </h4>
-                    <p className="text-gray-600 mt-1">${item.price}</p>
-                  </div>
+
+                <div className="p-5 flex flex-col gap-3">
+                  <h4 className="font-semibold text-lg">{item.name}</h4>
+                  <p className="text-gray-600 font-medium">₹{item.price}</p>
+
                   <button
-                    className="bg-red-500 text-white mt-4 px-3 py-2 rounded hover:bg-red-600 transition text-sm"
                     onClick={() => handleRemoveSavedItem(item)}
+                    className="mt-2 bg-red-500 text-white py-2 rounded-xl hover:bg-red-600 transition text-sm"
                   >
-                    Remove
+                    Remove from Wishlist
                   </button>
                 </div>
               </div>
             ))
           ) : (
-            <p className="text-gray-500">No saved items found.</p>
+            <p className="text-gray-500">No saved items yet.</p>
           )}
         </div>
       </section>
     </div>
   );
-};
-
-// Reusable info field
-const InfoField = ({ label, value }) => (
-  <div>
-    <label className="text-gray-600 text-xs sm:text-sm">{label}</label>
-    <p className="bg-gray-100 p-2 rounded text-sm">{value}</p>
-  </div>
-);
-
-export default Profile;
+}
+  const InfoField = ({ label, value }) => (
+    <div className="flex flex-col gap-1">
+      <label className="text-gray-500 text-xs uppercase tracking-wide">
+        {label}
+      </label>
+      <p className="bg-gray-100 rounded-xl px-4 py-2 text-gray-800">
+        {value}
+      </p>
+    </div>
+  )
+  export default Profile

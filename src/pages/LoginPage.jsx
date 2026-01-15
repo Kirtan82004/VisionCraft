@@ -13,4 +13,4 @@ const LoginPage =()=>{
     )
 }
 
-export default LoginPage;  //exporting the component to be used in other files
+export default LoginPage;

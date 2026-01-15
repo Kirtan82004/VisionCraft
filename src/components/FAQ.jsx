@@ -1,5 +1,5 @@
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { FiPlus, FiMinus } from "react-icons/fi";
 
 const FAQSection = () => {
   const faqs = [
@@ -11,38 +11,38 @@ const FAQSection = () => {
     {
       question: "Do you offer prescription lenses?",
       answer:
-        "Yes, we offer prescription lenses for all our eyeglasses. You can provide your prescription details during the checkout process.",
+        "Yes, we offer prescription lenses for all our eyeglasses. You can provide your prescription details during checkout.",
     },
     {
       question: "How long does shipping take?",
       answer:
-        "Shipping usually takes 5-7 business days. You will receive a tracking number once your order has been shipped.",
+        "Shipping usually takes 5–7 business days. Tracking details are shared once shipped.",
     },
     {
       question: "Can I change my order after placing it?",
       answer:
-        "If you need to change your order, please contact our customer service team as soon as possible. We will do our best to accommodate your request.",
+        "Please contact customer support as soon as possible. We'll try our best to help.",
     },
     {
       question: "Do you offer international shipping?",
       answer:
-        "Yes, we offer international shipping to many countries. Shipping costs and delivery times will vary depending on the destination.",
+        "Yes, international shipping is available. Costs and delivery times vary by country.",
     },
     {
       question: "How can I track my order?",
       answer:
-        "Once your order is shipped, we will send you a tracking number via email. You can use this to track your order on our website or the carrier's tracking page.",
+        "Once shipped, a tracking number is sent via email for real-time updates.",
     },
     {
       question: "What payment methods do you accept?",
       answer:
-        "We accept all major credit cards, PayPal, and other secure payment methods. You can view all available options during checkout.",
+        "We accept all major credit/debit cards, UPI, PayPal, and other secure methods.",
     },
     {
-      question: "Do you provide warranty on your products?",
+      question: "Do you provide warranty on products?",
       answer:
-        "Yes, we provide a 1-year warranty on all our eyewear products. If you experience any defects, please contact our support team.",
-    }
+        "Yes, all eyewear products include a 1-year manufacturing warranty.",
+    },
   ];
 
   const [openIndex, setOpenIndex] = useState(null);
@@ -52,36 +52,70 @@ const FAQSection = () => {
   };
 
   return (
-    <section className="bg-white px-4 sm:px-6 lg:px-20 py-10">
-      <div className="max-w-3xl mx-auto">
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-8 text-gray-800">
-          Frequently Asked Questions
-        </h2>
-        <div className="space-y-4">
-          {faqs.map((faq, index) => (
-            <div
-              key={index}
-              className="bg-gray-50 border border-gray-200 rounded-lg shadow-sm transition-all"
-            >
-              <button
-                onClick={() => toggleFAQ(index)}
-                className="w-full text-left px-4 py-4 flex justify-between items-center focus:outline-none"
-              >
-                <span className="text-base sm:text-lg font-medium text-gray-800">{faq.question}</span>
-                <span className="text-gray-600 text-xl">
-                  {openIndex === index ? '−' : '+'}
-                </span>
-              </button>
-              {openIndex === index && (
-                <div className="px-4 pb-4 text-sm sm:text-base text-gray-600">
-                  {faq.answer}
-                </div>
-              )}
-            </div>
-          ))}
+    <>
+      {/* HEADER */}
+      <section className="bg-gradient-to-br from-emerald-600 to-teal-600 py-24 text-white">
+        <div className="max-w-5xl mx-auto px-4 text-center">
+          <h1 className="text-4xl sm:text-5xl font-bold mb-4">
+            Frequently Asked Questions
+          </h1>
+          <p className="text-emerald-100 text-lg max-w-2xl mx-auto">
+            Everything you need to know about our Optical Shop & services
+          </p>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* FAQ CONTENT */}
+      <section className="bg-gray-50 py-20 px-4">
+        <div className="max-w-4xl mx-auto space-y-6">
+          {faqs.map((faq, index) => {
+            const isOpen = openIndex === index;
+
+            return (
+              <div
+                key={index}
+                className={`group rounded-2xl border transition-all duration-300
+                  ${isOpen
+                    ? "border-emerald-500 bg-white shadow-xl"
+                    : "border-gray-200 bg-white shadow-sm hover:shadow-md"
+                  }`}
+              >
+                {/* QUESTION */}
+                <button
+                  onClick={() => toggleFAQ(index)}
+                  className="w-full px-6 py-5 flex items-center justify-between text-left"
+                >
+                  <span className="text-lg font-semibold text-gray-800 group-hover:text-emerald-600 transition">
+                    {faq.question}
+                  </span>
+
+                  <span
+                    className={`flex items-center justify-center w-9 h-9 rounded-full border transition-all duration-300
+                      ${isOpen
+                        ? "bg-emerald-500 text-white border-emerald-500 rotate-180"
+                        : "bg-gray-100 text-gray-600 border-gray-300"
+                      }`}
+                  >
+                    {isOpen ? <FiMinus /> : <FiPlus />}
+                  </span>
+                </button>
+
+                {/* ANSWER */}
+                <div
+                  className={`px-6 overflow-hidden transition-all duration-500 ease-in-out
+                    ${isOpen ? "max-h-40 opacity-100 pb-6" : "max-h-0 opacity-0"}
+                  `}
+                >
+                  <p className="text-gray-600 leading-relaxed">
+                    {faq.answer}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    </>
   );
 };
 

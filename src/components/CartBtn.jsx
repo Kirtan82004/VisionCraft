@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const ShoppingCartButton = () => {
   const { cartItems } = useSelector(state => state.cart);  // Get cart items from Redux state
+  console.log("cartitem in cartbtn",cartItems)
   const navigate = useNavigate();
   return (
     <div className="relative">

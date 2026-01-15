@@ -8,7 +8,7 @@ export const useAlert = () => useContext(AlertContext);
 export const AlertProvider = ({ children }) => {
   const [alert, setAlert] = useState(null);
 
-  const showAlert = (type, message, duration = 3000) => {
+  const showAlert = (type, message, duration = 10000) => {
     setAlert({ type, message, duration });
   };
 

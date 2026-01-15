@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {logoutUser} from "../../services/user/authService.js"
 //import {logoutAdmin} from "../../services/admin/authService.js"
 import {userLogout} from "../../store/authSlice.js"
-import {adminLogout} from "../../store/adminAuthSlice.js"
+import {adminLogout} from "../../store/admin/adminAuthSlice.js"
 import {getCurrentUser} from "../../services/user/authService.js"
 import { useNavigate } from 'react-router-dom';
 import { useAlert } from '../../hooks/AlertProvider.jsx';

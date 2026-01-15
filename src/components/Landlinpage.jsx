@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaShoppingCart, FaInfoCircle, FaGlasses, FaStar, FaUserCheck } from "react-icons/fa";
-import HeroImage from "../assets/hero.jpg";
-import logo from '../assets/logo.png';
+import HeroImage from "../assets/hero.webp";
+import logo from '../assets/logo.webp';
 
 const LandingPage = () => {
   return (

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ShoppingCartButton, LogoutBtn } from "../index.js";
 import { Menu, X, ChevronDown } from "lucide-react";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/logo.webp";
 
 const Header = () => {
   const navigate = useNavigate();

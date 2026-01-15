@@ -4,26 +4,28 @@ import { userLogout, loginSuccess } from './store/authSlice.js'
 import './App.css'
 import { useNavigate, Outlet } from 'react-router-dom'
 import { Header, Footer } from './components/index.js'
-import { getCurrentUser,refreshAccessToken } from "./services/user/authService.js"
-import { adminLoginSuccess } from "./store/adminAuthSlice.js"
+import { getCurrentUser, refreshAccessToken } from "./services/user/authService.js"
+import { adminLoginSuccess } from "./store/admin/adminAuthSlice.js"
 
 
 function App() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [role,setRole] = useState('')
   const dispatch = useDispatch();
 
- const fetchUserData = async () => {
+  const fetchUserData = async () => {
     try {
       const response = await getCurrentUser();
-      console.log("response",response)
+      console.log("response", response)
       const user = response?.data;
       const success = response?.success;
+      setRole(user.role)
 
-      if(response?.message === "jwt expired") {
+      if (response?.message === "jwt expired") {
         // Try to refresh the access token
         const refreshResponse = await refreshAccessToken();
-        if(refreshResponse?.success) {
+        if (refreshResponse?.success) {
           // Retry fetching user data
           return fetchUserData();
         } else {
@@ -61,7 +63,7 @@ function App() {
     fetchUserData();
   }, []);
 
-   if (loading) {
+  if (loading) {
     return <div className="flex justify-center items-center h-screen">
       <span className="loader"></span>
     </div>;
@@ -69,13 +71,13 @@ function App() {
 
   return (
     <div className="min-h-screen min-width-screen flex flex-wrap content-between bg-blue-100 ">
-      <div className='w-full block'>
-        <Header />
-        <main className='mx-10'>
-          <Outlet />
-        </main>
-        <Footer />
-      </div>
+    <div className='w-full  block'>
+      <Header />
+      <main className=''>
+        <Outlet />
+      </main>
+      {role === "user" && <Footer />}
+    </div>
     </div>
   );
 }

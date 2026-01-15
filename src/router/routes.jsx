@@ -1,5 +1,5 @@
 // src/router/routes.jsx
-import React, { Suspense,lazy } from "react";
+import React, { Suspense, lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import { AuthLayout } from "../components/index.js";
 
@@ -23,10 +23,13 @@ const OpticalNews = lazy(() => import("../pages/NewsPage.jsx"));
 // Admin
 const Dashboard = lazy(() => import("../components/admin/dashboard.jsx"));
 const OrdersPage = lazy(() => import("../pages/admin/orders.jsx"));
+const OrderViewPage = lazy(()=>import ("../pages/admin/order/orderViewPage.jsx"))
 const InventoryPage = lazy(() => import("../pages/admin/inventory.jsx"));
 const InvoicesPage = lazy(() => import("../pages/admin/invoices.jsx"));
+const InvoiceViewPage = lazy(()=>import("../pages/admin/invoice/invoiceViewPage.jsx"));
 const AppointmentPage = lazy(() => import("../pages/admin/appointments.jsx"));
 const CustomersPage = lazy(() => import("../pages/admin/customers.jsx"));
+const CustomerViewPage =lazy(()=>import("../pages/admin/customer/customerViewPage.jsx"))
 const NotificationsPage = lazy(() => import("../pages/admin/notifications.jsx"));
 const SendMailPage = lazy(() => import("../pages/admin/sendMail.jsx"));
 const ServicesPage = lazy(() => import("../pages/admin/services.jsx"));
@@ -36,6 +39,9 @@ const EditProductPage = lazy(() => import("../pages/admin/editProduct.jsx"));
 const AddProductPage = lazy(() => import("../pages/admin/addProduct.jsx"));
 
 import App from "../App.jsx";
+import AdminLayout from '../components/admin/adminLayout.jsx'
+
+
 
 const Loading = () => <div>Loading...</div>;
 
@@ -133,19 +139,32 @@ export const router = createBrowserRouter([
       { path: "news", element: <OpticalNews /> },
 
       // Admin
-      { path: "admin/dashboard", element: <Dashboard /> },
-      { path: "admin/orders", element: <OrdersPage /> },
-      { path: "admin/inventory", element: <InventoryPage /> },
-      { path: "admin/invoices", element: <InvoicesPage /> },
-      { path: "admin/appointments", element: <AppointmentPage /> },
-      { path: "admin/customers", element: <CustomersPage /> },
-      { path: "admin/notifications", element: <NotificationsPage /> },
-      { path: "admin/send-mail", element: <SendMailPage /> },
-      { path: "admin/services", element: <ServicesPage /> },
-      { path: "admin/settings", element: <SettingsPage /> },
-      { path: "admin/product/:id", element: <AdminProductDetailPage /> },
-      { path: "admin/product/edit/:id", element: <EditProductPage /> },
-      { path: "admin/product/add", element: <AddProductPage /> },
+      {
+        path: "admin",
+        element: (
+            <AdminLayout />
+        ),
+        children: [
+          { index: true, element: <Dashboard /> },
+          { path: "dashboard", element: <Dashboard /> },
+          { path: "orders", element: <OrdersPage /> },
+          { path: "orders/:id", element: <OrderViewPage/>},
+          { path: "inventory", element: <InventoryPage /> },
+          { path: "invoices", element: <InvoicesPage /> },
+          { path: "invoices/:id", element: <InvoiceViewPage /> },
+          { path: "appointments", element: <AppointmentPage /> },
+          { path: "customers", element: <CustomersPage /> },
+          { path: "customers/:id", element:<CustomerViewPage/>},
+          { path: "notifications", element: <NotificationsPage /> },
+          { path: "send-mail", element: <SendMailPage /> },
+          { path: "services", element: <ServicesPage /> },
+          { path: "settings", element: <SettingsPage /> },
+          { path: "product/add", element: <AddProductPage /> },
+          { path: "product/:id", element: <AdminProductDetailPage /> },
+          { path: "product/edit/:id", element: <EditProductPage /> },
+        ]
+      }
+
     ],
   },
 ]);

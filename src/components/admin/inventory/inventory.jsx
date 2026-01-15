@@ -1,20 +1,25 @@
 import { FaSearch, FaPlus, FaEdit, FaTrash, FaEye } from "react-icons/fa";
 import { useState, useEffect } from "react";
-import { getProducts,deleteProduct } from "../../../services/admin/productService.js";
+import { getProducts, deleteProduct } from "../../../services/admin/productService.js";
 import { useNavigate } from "react-router-dom";
 
 const Inventory = () => {
   const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState('all');
   const navigate = useNavigate();
-   const fetchProducts = async () => {
-      try {
-        const data = await getProducts();
-        setProducts(data || []);
-        console.log("InventoryProductsData", data);
-      } catch (error) {
-        console.error("Inventory Products Error:", error);
-      }
-    };
+  const categorys = [...new Set(products.map(p => p.category.name))];
+  console.log("categorys",categorys)
+  const fetchProducts = async () => {
+    try {
+      const data = await getProducts();
+      console.log("products in inventory",data)
+      setProducts(data || []);
+      console.log("InventoryProductsData", data);
+    } catch (error) {
+      console.error("Inventory Products Error:", error);
+    }
+  };
 
   useEffect(() => {
     fetchProducts();
@@ -27,6 +32,24 @@ const Inventory = () => {
     fetchProducts();
     // Refresh product list after deletion
   }
+  const filterProducts = () => {
+    let filtered = [...products];
+    console.log("filtered",filtered.map(p => p.category))
+
+    if (search) {
+      filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    if (categoryFilter !== 'all') {
+      filtered = filtered.filter(p => p.category?.name === categoryFilter);
+    }
+    return filtered;
+  };
+
+  const filtered = filterProducts();
+
 
   return (
     <div className="p-4 sm:p-6">
@@ -36,7 +59,7 @@ const Inventory = () => {
         <h1 className="text-2xl font-semibold text-gray-800">Inventory</h1>
 
         <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 w-full sm:w-auto justify-center"
-        onClick={() => navigate("/admin/product/add")}
+          onClick={() => navigate("/admin/product/add")}
         >
           <FaPlus /> Add Product
         </button>
@@ -52,16 +75,21 @@ const Inventory = () => {
             type="text"
             placeholder="Search product..."
             className="bg-transparent outline-none w-full"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
 
         {/* Filter */}
-        <select className="px-3 py-2 border rounded-md text-gray-700 w-full sm:w-1/4">
-          <option value="">All Categories</option>
-          <option value="Sunglasses">Sunglasses</option>
-          <option value="Frames">Frames</option>
-          <option value="Lens">Lens</option>
-          <option value="Accessories">Accessories</option>
+        <select
+          className="px-3 py-2 border rounded-md text-gray-700 w-full sm:w-1/4"
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+        >
+          <option value="all">All Categories</option>
+          {categorys.map(b => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
         </select>
       </div>
 
@@ -78,7 +106,7 @@ const Inventory = () => {
           </thead>
 
           <tbody>
-            {products.map((p) => (
+            {filtered.map((p) => (
               <tr
                 key={p._id}
                 className="border-b hover:bg-gray-100 transition"
@@ -86,9 +114,8 @@ const Inventory = () => {
                 <td className="py-3 px-4 wrap-break-word max-w-[200px]">{p.name}</td>
 
                 <td
-                  className={`py-3 px-4 font-semibold ${
-                    p.stock < 10 ? "text-red-500" : "text-gray-800"
-                  }`}
+                  className={`py-3 px-4 font-semibold ${p.stock < 10 ? "text-red-500" : "text-gray-800"
+                    }`}
                 >
                   {p.stock}
                 </td>
@@ -112,7 +139,7 @@ const Inventory = () => {
                     </button>
 
                     <button className="text-red-600 hover:text-red-800"
-                    onClick={()=>{handleDelete(p._id)}}
+                      onClick={() => { handleDelete(p._id) }}
                     >
                       <FaTrash size={18} />
                     </button>

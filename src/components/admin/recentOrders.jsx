@@ -36,7 +36,7 @@ const RecentOrders = () => {
           <tbody>
             {orders.map((order) => (
               <tr key={order._id} className="border-b">
-                <td className="py-2 wrap-break-word">{order._id}</td>
+                <td className="py-2 wrap-break-word">{order.orderId}</td>
                 <td className="py-2">{order.customer.fullName}</td>
                 <td className="py-2">₹{order.totalPrice}</td>
                 <td className="py-2">

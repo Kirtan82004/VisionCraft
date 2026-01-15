@@ -1,26 +1,26 @@
+"use client"
 
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { updateAccountDetails, updateProfileImage } from "../../services/user/authService"; // ✅ New API function
-import { loginSuccess } from "../../store/authSlice"; // ✅ Redux state update
+import React, { useEffect, useState } from "react"
+import { useSelector, useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import { updateAccountDetails, updateProfileImage } from "../../services/user/authService"
+import { loginSuccess } from "../../store/authSlice"
 
 const EditProfile = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const authUser = useSelector((state) => state.auth.user);
-  console.log("edit",authUser)
-  
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const authUser = useSelector((state) => state.auth.user)
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     phoneNo: "",
     address: "",
     profilePic: "",
-  });
+  })
 
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [previewUrl, setPreviewUrl] = useState("")
 
   useEffect(() => {
     if (authUser) {
@@ -29,147 +29,137 @@ const EditProfile = () => {
         email: authUser.email || "",
         phoneNo: authUser.phoneNo || "",
         address: authUser.address || "",
-        profilePic: authUser.image|| "",
-      });
-      setPreviewUrl(authUser.image || "https://placehold.co/100x100");
+        profilePic: authUser.image || "",
+      })
+      setPreviewUrl(authUser.image || "https://placehold.co/150x150")
     }
-  }, [authUser]);
+  }, [authUser])
 
-  // Handle form input changes
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
 
-  // Handle file selection
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]
     if (file) {
-      setSelectedFile(file);
-      setPreviewUrl(URL.createObjectURL(file)); // Show image preview
+      setSelectedFile(file)
+      setPreviewUrl(URL.createObjectURL(file))
     }
-  };
+  }
 
-  // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    let uploadedImageUrl = formData.profilePic;
+    let uploadedImageUrl = formData.profilePic
 
     if (selectedFile) {
-      try {
-        uploadedImageUrl = await updateProfileImage(selectedFile); // ✅ Upload image API
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        alert("Image upload failed.");
-        return;
-      }
+      uploadedImageUrl = await updateProfileImage(selectedFile)
     }
 
-    try {
-      const updatedUser = await updateAccountDetails({ ...formData, profilePic: uploadedImageUrl });
-      console.log(updatedUser)
-      dispatch(loginSuccess(updatedUser.data));
-      alert("Profile updated successfully!");
-      navigate("/profile");
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      alert("Failed to update profile.");
-    }
-  };
+    const updatedUser = await updateAccountDetails({
+      ...formData,
+      profilePic: uploadedImageUrl,
+    })
+
+    dispatch(loginSuccess(updatedUser.data))
+    navigate("/profile")
+  }
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-2xl font-semibold mb-4">Edit Profile</h2>
-        
-        {/* Profile Picture Upload */}
-        <div className="flex flex-col items-center mb-4">
-          <img
-            src={previewUrl}
-            alt="Profile"
-            className="w-24 h-24 rounded-full border-4 border-gray-300"
-          />
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="mt-2 p-2 border rounded w-full"
-          />
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+      <div className="bg-white rounded-xl shadow-lg w-full max-w-3xl p-6 sm:p-8">
+        <h2 className="text-2xl font-bold mb-6 text-center">Edit Profile</h2>
+
+        {/* Avatar Section */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="relative">
+            <img
+              src={previewUrl}
+              alt="Profile"
+              className="w-28 h-28 rounded-full object-cover border-4 border-blue-500 shadow"
+            />
+            <label className="absolute bottom-1 right-1 bg-blue-600 text-white text-xs px-2 py-1 rounded-full cursor-pointer hover:bg-blue-700">
+              Edit
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            </label>
+          </div>
+          <p className="text-xs text-gray-500 mt-2">Click to change profile photo</p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-700">Full Name</label>
-            <input
-              type="text"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          
-          <div>
-            <label className="block text-gray-700">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
-              disabled
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <InputField
+            label="Full Name"
+            name="fullName"
+            value={formData.fullName}
+            onChange={handleChange}
+          />
 
-          <div>
-            <label className="block text-gray-700">Phone Number</label>
-            <input
-              type="text"
-              name="phoneNo"
-              value={formData.phoneNo}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-            />
+          <InputField
+            label="Email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            disabled
+          />
+
+          <InputField
+            label="Phone Number"
+            name="phoneNo"
+            value={formData.phoneNo}
+            onChange={handleChange}
+          />
+
+          <InputField
+            label="Address"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+          />
+
+          {/* Actions */}
+          <div className="sm:col-span-2 flex justify-end gap-3 mt-4">
+            <button
+              type="button"
+              onClick={() => navigate("/profile")}
+              className="px-5 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition shadow"
+            >
+              Save Changes
+            </button>
           </div>
-
-          <div>
-            <label className="block text-gray-700">Address</label>
-            <input
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-            />
-          </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600"
-          >
-            Save Changes
-          </button>
-
-          {/* Cancel Button */}
-          <button
-            type="button"
-            onClick={() => navigate("/profile")}
-            className="ml-4 bg-gray-500 text-white px-4 py-2 rounded shadow hover:bg-gray-600"
-          >
-            Cancel
-          </button>
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default EditProfile;
+/* Reusable Input */
+const InputField = ({ label, name, value, onChange, disabled = false }) => (
+  <div>
+    <label className="text-sm text-gray-600">{label}</label>
+    <input
+      type="text"
+      name={name}
+      value={value}
+      onChange={onChange}
+      disabled={disabled}
+      className={`w-full mt-1 px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none ${
+        disabled ? "bg-gray-100 cursor-not-allowed" : ""
+      }`}
+    />
+  </div>
+)
+
+export default EditProfile
