@@ -12,7 +12,7 @@ const Invoices = () => {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  
+
   const navigate = useNavigate()
 
   // Pagination states
@@ -34,7 +34,7 @@ const Invoices = () => {
       // ✅ Convert orders → invoices
       const formatted = orders.map((order) => ({
         id: `INV-${order._id.slice(-6).toUpperCase()}`,
-        orderId:order._id,
+        orderId: order._id,
         customer: order.customerName || "Unknown",
         date: order.createdAt ? order.createdAt.split("T")[0] : "N/A",
         amount: `₹${order.totalAmount}`,
@@ -42,8 +42,8 @@ const Invoices = () => {
           order.paymentStatus === "Success"
             ? "Paid"
             : order.paymentStatus === "pending"
-            ? "Pending"
-            : "Cancelled",
+              ? "Pending"
+              : "Cancelled",
       }));
 
       setInvoices(formatted);
@@ -77,13 +77,13 @@ const Invoices = () => {
 
 
   const handleDownloadInvoice = async (orderId) => {
-  try {
-    const res = await getOrderById(orderId);
-    generateInvoicePDF(res.data);
-  } catch (error) {
-    console.error("PDF download failed", error);
-  }
-};
+    try {
+      const res = await getOrderById(orderId);
+      generateInvoicePDF(res.data);
+    } catch (error) {
+      console.error("PDF download failed", error);
+    }
+  };
 
 
   // ✅ Pagination logic
@@ -94,33 +94,26 @@ const Invoices = () => {
   const totalPages = Math.ceil(filteredInvoices.length / itemsPerPage);
 
   return (
-    <div className="p-6">
+    <div className="p-4 sm:p-6">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold text-gray-800">Invoices</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">
+          Invoices
+        </h1>
       </div>
 
-      {/* Search + Filter Section */}
-      <div className="bg-white p-4 rounded-lg shadow mb-6 flex flex-col sm:flex-row gap-4 justify-between">
-        {/* Search */}
-        <div className="flex items-center bg-gray-100 px-3 py-2 rounded-md w-full sm:w-1/2">
+      {/* Search */}
+      <div className="bg-white p-3 rounded-lg shadow mb-4">
+        <div className="flex items-center bg-gray-100 px-3 py-2 rounded-md">
           <FaSearch className="text-gray-500" />
           <input
             type="text"
             placeholder="Search invoices..."
-            className="bg-transparent outline-none px-2 w-full"
+            className="bg-transparent outline-none px-2 w-full text-sm"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-
-        {/* Status Filter */}
-        <select className="px-3 py-2 border rounded-md text-gray-700 w-full sm:w-1/4">
-          <option value="">All Status</option>
-          <option value="Paid">Paid</option>
-          <option value="Pending">Pending</option>
-          <option value="Cancelled">Cancelled</option>
-        </select>
       </div>
 
       {/* Loading */}
@@ -129,9 +122,60 @@ const Invoices = () => {
       {/* Error */}
       {error && <p className="text-center text-red-600">{error}</p>}
 
-      {/* Invoices Table */}
+      {/* ================= MOBILE VIEW ================= */}
+      <div className="block md:hidden space-y-4">
+        {currentInvoices.map((inv) => (
+          <div
+            key={inv.id}
+            className="bg-white shadow rounded-lg p-4 space-y-2"
+          >
+            <div className="flex justify-between items-center">
+              <h2 className="font-semibold text-gray-800">{inv.id}</h2>
+              <span
+                className={`px-3 py-1 text-xs rounded-full ${statusColor[inv.status]}`}
+              >
+                {inv.status}
+              </span>
+            </div>
+
+            <p className="text-sm text-gray-600">
+              <span className="font-medium">Customer:</span> {inv.customer}
+            </p>
+
+            <p className="text-sm text-gray-600">
+              <span className="font-medium">Date:</span> {inv.date}
+            </p>
+
+            <p className="text-sm font-semibold text-gray-800">
+              Amount: {inv.amount}
+            </p>
+
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => navigate(`/admin/invoices/${inv.orderId}`)}
+                className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white py-2 rounded-md text-sm"
+              >
+                <FaEye /> View
+              </button>
+
+              <button
+                onClick={() => handleDownloadInvoice(inv.orderId)}
+                className="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white py-2 rounded-md text-sm"
+              >
+                <FaDownload /> PDF
+              </button>
+            </div>
+          </div>
+        ))}
+
+        {currentInvoices.length === 0 && (
+          <p className="text-center text-gray-500">No invoices found</p>
+        )}
+      </div>
+
+      {/* ================= DESKTOP TABLE ================= */}
       {!loading && !error && (
-        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+        <div className="hidden md:block bg-white shadow-md rounded-lg overflow-hidden">
           <table className="w-full text-left">
             <thead className="bg-purple-600 text-white">
               <tr>
@@ -151,7 +195,6 @@ const Invoices = () => {
                   <td className="py-3 px-4">{inv.customer}</td>
                   <td className="py-3 px-4">{inv.date}</td>
                   <td className="py-3 px-4 font-semibold">{inv.amount}</td>
-
                   <td className="py-3 px-4">
                     <span
                       className={`px-3 py-1 text-sm rounded-full ${statusColor[inv.status]}`}
@@ -159,61 +202,61 @@ const Invoices = () => {
                       {inv.status}
                     </span>
                   </td>
-
                   <td className="py-3 px-4 flex justify-center gap-3">
-                    <button onClick={()=>navigate(`/admin/invoices/${inv.orderId}`)} className="text-blue-600 hover:text-blue-800">
+                    <button
+                      onClick={() =>
+                        navigate(`/admin/invoices/${inv.orderId}`)
+                      }
+                      className="text-blue-600 hover:text-blue-800"
+                    >
                       <FaEye />
                     </button>
-                    <button onClick={() => handleDownloadInvoice(inv.orderId)} className="text-green-600 hover:text-green-800">
+                    <button
+                      onClick={() => handleDownloadInvoice(inv.orderId)}
+                      className="text-green-600 hover:text-green-800"
+                    >
                       <FaDownload />
                     </button>
                   </td>
                 </tr>
               ))}
-              {currentInvoices.length === 0 && (
-                <tr>
-                  <td colSpan="6" className="text-center py-4 text-gray-500">
-                    No invoices found
-                  </td>
-                </tr>
-              )}
             </tbody>
           </table>
-
-          {/* ✅ Pagination Controls */}
-          <div className="flex justify-center items-center gap-2 p-4">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((prev) => prev - 1)}
-              className="px-3 py-1 border rounded disabled:opacity-50"
-            >
-              Prev
-            </button>
-
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentPage(i + 1)}
-                className={`px-3 py-1 border rounded ${
-                  currentPage === i + 1 ? "bg-purple-600 text-white" : ""
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
-
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((prev) => prev + 1)}
-              className="px-3 py-1 border rounded disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
         </div>
       )}
+
+      {/* Pagination */}
+      <div className="flex flex-wrap justify-center gap-2 mt-4">
+        <button
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((p) => p - 1)}
+          className="px-3 py-1 border rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentPage(i + 1)}
+            className={`px-3 py-1 border rounded ${currentPage === i + 1 ? "bg-purple-600 text-white" : ""
+              }`}
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        <button
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((p) => p + 1)}
+          className="px-3 py-1 border rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
+
 };
 
 export default Invoices;
