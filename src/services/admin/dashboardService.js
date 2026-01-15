@@ -9,9 +9,14 @@ const getDashboardStats = async () => {
         return error.response.data;
     }
 }
-const getSalesReport = async () =>{
+const getSalesReport = async (startDate,endDate) =>{
     try {
-        const res = await API.get('admin/dashboard/sales-report',{data:{startDate,endDate}});
+        console.log("running salerport in service")
+        console.log(startDate,endDate)
+        const res = await API.get('admin/dashboard/sales-report',{
+        params: { startDate, endDate }, // ✅ correct
+      });
+
         return res.data;
     } catch (error) {
         return error.response.data;

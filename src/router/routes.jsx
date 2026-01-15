@@ -29,7 +29,7 @@ const InvoicesPage = lazy(() => import("../pages/admin/invoices.jsx"));
 const InvoiceViewPage = lazy(()=>import("../pages/admin/invoice/invoiceViewPage.jsx"));
 const AppointmentPage = lazy(() => import("../pages/admin/appointments.jsx"));
 const CustomersPage = lazy(() => import("../pages/admin/customers.jsx"));
-const CustomerViewPage =lazy(()=>import("../pages/admin/customer/customerViewPage.jsx"))
+const CustomerViewPage =lazy(()=>import("../pages/admin/customer/customerViewPage.jsx"));
 const NotificationsPage = lazy(() => import("../pages/admin/notifications.jsx"));
 const SendMailPage = lazy(() => import("../pages/admin/sendMail.jsx"));
 const ServicesPage = lazy(() => import("../pages/admin/services.jsx"));
@@ -37,6 +37,7 @@ const SettingsPage = lazy(() => import("../pages/admin/settings.jsx"));
 const AdminProductDetailPage = lazy(() => import("../pages/admin/productDetails.jsx"));
 const EditProductPage = lazy(() => import("../pages/admin/editProduct.jsx"));
 const AddProductPage = lazy(() => import("../pages/admin/addProduct.jsx"));
+
 
 import App from "../App.jsx";
 import AdminLayout from '../components/admin/adminLayout.jsx'
