@@ -23,9 +23,9 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* 🔥 Mobile Hamburger */}
+      {/* 🔥 Mobile Hamburger (TOP RIGHT) */}
       <button
-        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-white shadow-md rounded-md text-purple-700"
+        className="lg:hidden fixed top-4 right-4 z-50 p-3 bg-white shadow-md rounded-md text-purple-700"
         onClick={() => setIsOpen(true)}
       >
         <FaBars size={20} />
@@ -42,16 +42,16 @@ const Sidebar = () => {
       {/* SIDEBAR */}
       <aside
         className={`
-          fixed top-0 left-0 h-full w-72 bg-white shadow-lg p-4 flex flex-col z-50
+          fixed top-0 right-0 h-full w-72 bg-white shadow-lg p-4 flex flex-col z-50
           transform transition-transform duration-300
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          lg:translate-x-0 lg:top-20 lg:h-[calc(100vh-5rem)]
+          ${isOpen ? "translate-x-0" : "translate-x-full"}
+          lg:left-0 lg:right-auto lg:translate-x-0 lg:top-20 lg:h-[calc(100vh-5rem)]
         `}
       >
-        {/* Close (Mobile Only) */}
+        {/* Close (Mobile) */}
         <button
           onClick={closeSidebar}
-          className="lg:hidden mb-4 p-2 text-purple-700 w-fit"
+          className="lg:hidden mb-4 p-2 text-purple-700 w-fit self-end"
         >
           <FaTimes size={22} />
         </button>
