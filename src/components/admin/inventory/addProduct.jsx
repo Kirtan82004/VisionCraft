@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { createProduct } from "../../../services/admin/productService";
+import { createAdminProduct } from "../../../store/admin/adminProductSlice"
 
 const inputStyle =
   "w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:outline-none";
@@ -57,7 +57,7 @@ const AddProduct = () => {
         }
       });
 
-      await createProduct(fd);
+      createAdminProduct(fd);
       navigate("/admin/inventory");
     } catch (error) {
       console.error("Add Product Error:", error);

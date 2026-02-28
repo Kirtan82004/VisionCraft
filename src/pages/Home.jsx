@@ -13,10 +13,10 @@ import {
 const Home = () => {
   const dispatch = useDispatch();
   const { products, loading } = useSelector((state) => state.products);
-
   useEffect(() => {
     const fetchProducts = async () => {
-      try {
+      try 
+      {
         if (products.length === 0) {
           dispatch(fetchProductsStart());
           const response = await getAllProducts();
@@ -145,7 +145,7 @@ const Home = () => {
       </section>
 
       {/* NEWSLETTER */}
-      <section className="py-24 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+      {/* <section className="py-24 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
         <div className="max-w-3xl mx-auto text-center px-4">
           <h2 className="text-4xl font-bold mb-4">
             Stay in the Loop 👓
@@ -165,7 +165,7 @@ const Home = () => {
             </button>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };

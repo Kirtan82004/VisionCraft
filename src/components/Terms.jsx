@@ -43,10 +43,10 @@ const termsData = [
 
 const TermsAndConditions = () => {
   return (
-    <main className="bg-gray-50">
+    <main className="max-w-7xl mx-auto px-4 py-8 mt-16 sm:mt-20 space-y-8">
 
       {/* HERO */}
-      <section className="bg-linear-to-br from-emerald-600 to-teal-600 py-20 px-4 text-white">
+      <section className="bg-linear-to-br from-emerald-600 to-teal-600 py-10 px-4 text-white rounded-3xl shadow-xl">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl font-bold mb-4">
             Terms & Conditions
@@ -58,7 +58,7 @@ const TermsAndConditions = () => {
       </section>
 
       {/* CONTENT */}
-      <section className="max-w-4xl mx-auto px-4 py-16">
+      <section className="mx-auto px-4 py-16">
         <div className="space-y-8">
           {termsData.map((term, index) => (
             <div

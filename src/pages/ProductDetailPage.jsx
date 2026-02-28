@@ -6,9 +6,9 @@ import ProductDetail from "../components/user/ProductDetails.jsx";
 const ProductDetailPage = ()=>{
     return(
         <>
-        <Container>
+       
             <ProductDetail />
-        </Container>
+        
         </>
     )
 }

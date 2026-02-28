@@ -30,15 +30,15 @@ const Login = () => {
       dispatch(loginStart());
       dispatch(adminLoginStart());
 
-      const response = await loginUser(formData);
-      const user = response?.user;
+      const user = await loginUser(formData);
       if (!user) throw new Error('Invalid credentials');
 
-      if (user.role === 'admin') {
+      if (user.safeUser.role === 'admin') {
         dispatch(adminLoginSuccess(user));
         showAlert('success', 'Admin login successful!');
         navigate('/admin/dashboard');
       } else {
+        
         dispatch(loginSuccess(user));
         showAlert('success', 'Login successful!');
         navigate('/');

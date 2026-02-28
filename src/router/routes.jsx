@@ -43,14 +43,11 @@ import App from "../App.jsx";
 import AdminLayout from '../components/admin/adminLayout.jsx'
 
 
-
-const Loading = () => <div>Loading...</div>;
-
 export const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <Suspense fallback={<Loading />}>
+      <Suspense>
         <App />
       </Suspense>
     ),

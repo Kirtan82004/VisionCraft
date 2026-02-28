@@ -1,79 +1,151 @@
 // src/utils/socketListeners.js
-import store  from "../store/store.js"; // Import the store to dispatch actions
+import store from "../store/store.js";
 import { socket } from "./socket.js";
 
-// import realtime reducers from slices
-import { productAddedRealtime, productUpdatedRealtime, productDeletedRealtime } from "../store/productSlice.js";
-import { orderPlacedRealtime, orderCancelledRealtime } from "../store/orderSlice.js";
-import { addOrderRealtime, cancelOrderRealtime } from "../store/admin/adminOrederManagmentSlice.js";
-import { cartUpdatedRealtime, cartClearedRealtime } from "../store/cartSlice.js";
-import { wishlistUpdatedRealtime, wishlistClearedRealtime } from "../store/wishlistSlice.js";
-import { reviewAddedRealtime, reviewUpdatedRealtime, reviewDeletedRealtime } from "../store/reviewSlice.js";
+// Product
+import {
+  productAddedRealtime,
+  productUpdatedRealtime,
+  productDeletedRealtime,
+} from "../store/productSlice.js";
+
+// Orders (User)
+import {
+  orderPlacedRealtime,
+  orderCancelledRealtime,
+} from "../store/orderSlice.js";
+
+// Orders (Admin)
+import {
+  addOrderRealtime,
+  cancelOrderRealtime,
+} from "../store/admin/adminOrederSlice.js";
+
+// Cart
+import {
+  cartUpdatedRealtime,
+} from "../store/cartSlice.js";
+
+// Wishlist
+import {
+  wishlistUpdatedRealtime,
+  wishlistClearedRealtime,
+} from "../store/wishlistSlice.js";
+
+// Reviews
+import {
+  reviewAddedRealtime,
+  reviewUpdatedRealtime,
+  reviewDeletedRealtime,
+} from "../store/reviewSlice.js";
+
+// Notifications
 import { addNotification } from "../store/notificationSlice.js";
 
-// ✅ Register all listeners
+let listenersRegistered = false;
+
+// ✅ Register all listeners (ONLY ONCE)
 export const registerSocketListeners = () => {
-  // Products
-  socket.on("productCreated", (data) => {
-    store.dispatch(productAddedRealtime(data.product));
-  });
-  socket.on("productUpdated", (data) => {
-    store.dispatch(productUpdatedRealtime(data.product));
-  });
-  socket.on("productDeleted", (data) => {
-    store.dispatch(productDeletedRealtime(data));
+  if (listenersRegistered) return;
+  listenersRegistered = true;
+
+  /* ================= PRODUCTS ================= */
+  socket.off("productCreated");
+  socket.on("productCreated", ({ product }) => {
+    if (product) store.dispatch(productAddedRealtime(product));
   });
 
-  // Orders (User)
-  socket.on("orderPlaced", (data) => {
-    store.dispatch(orderPlacedRealtime(data.order));
-  });
-  socket.on("orderCancelled", (data) => {
-    store.dispatch(orderCancelledRealtime(data));
+  socket.off("productUpdated");
+  socket.on("productUpdated", ({ product }) => {
+    if (product) store.dispatch(productUpdatedRealtime(product));
   });
 
-  // Orders (Admin)
-  socket.on("orderPlaced", (data) => {
-    store.dispatch(addOrderRealtime(data.order));
-  });
-  socket.on("orderCancelled", (data) => {
-    store.dispatch(cancelOrderRealtime(data));
+  socket.off("productDeleted");
+  socket.on("productDeleted", ({ productId }) => {
+    if (productId) store.dispatch(productDeletedRealtime({ productId }));
   });
 
-  // Cart
+  /* ================= ORDERS ================= */
+
+  socket.off("orderPlaced");
+  socket.on("orderPlaced", ({ order }) => {
+    if (!order) return;
+
+    // user orders
+    store.dispatch(orderPlacedRealtime(order));
+
+    // admin orders
+    store.dispatch(addOrderRealtime(order));
+  });
+
+  socket.off("orderCancelled");
+  socket.on("orderCancelled", ({ orderId, status }) => {
+    if (!orderId) return;
+
+    store.dispatch(orderCancelledRealtime({ orderId, status }));
+    store.dispatch(cancelOrderRealtime({ orderId, status }));
+  });
+
+  /* ================= CART ================= */
+  socket.off("cartUpdated");
   socket.on("cartUpdated", (data) => {
-    store.dispatch(cartUpdatedRealtime(data));
-  });
-  socket.on("cartCleared", () => {
-    store.dispatch(cartClearedRealtime());
+    if (data?.items) {
+      store.dispatch(cartUpdatedRealtime(data));
+    }
   });
 
-  // Wishlist
+  /* ================= WISHLIST ================= */
+  socket.off("wishlistUpdated");
   socket.on("wishlistUpdated", (data) => {
-    console.log("Wishlist updated realtime data:", data);
-    store.dispatch(wishlistUpdatedRealtime(data));
+    if (data?.wishlist) {
+      store.dispatch(wishlistUpdatedRealtime(data));
+    }
   });
+
+  socket.off("wishlistCleared");
   socket.on("wishlistCleared", () => {
     store.dispatch(wishlistClearedRealtime());
   });
 
-  // Reviews
-  socket.on("reviewAdded", (data) => {
-    store.dispatch(reviewAddedRealtime(data.review));
-  });
-  socket.on("reviewUpdated", (data) => {
-    store.dispatch(reviewUpdatedRealtime(data.review));
-  });
-  socket.on("reviewDeleted", (data) => {
-    store.dispatch(reviewDeletedRealtime(data));
+  /* ================= REVIEWS ================= */
+  socket.off("reviewAdded");
+  socket.on("reviewAdded", ({ review }) => {
+    if (review) store.dispatch(reviewAddedRealtime(review));
   });
 
-  // Notifications (example: new user registered)
-  socket.on("userRegistered", (data) => {
-    store.dispatch(addNotification({
-      type: "New User",
-      message: `User ${data.fullName} registered with email ${data.email}`,
-      timestamp: data.createdAt,
-    }));
+  socket.off("reviewUpdated");
+  socket.on("reviewUpdated", ({ review }) => {
+    if (review) store.dispatch(reviewUpdatedRealtime(review));
   });
+
+  socket.off("reviewDeleted");
+  socket.on("reviewDeleted", ({ reviewId }) => {
+    if (reviewId) store.dispatch(reviewDeletedRealtime({ reviewId }));
+  });
+
+  /* ================= NOTIFICATIONS ================= */
+  socket.off("userRegistered");
+  socket.on("userRegistered", (data) => {
+    store.dispatch(
+      addNotification({
+        type: "New User",
+        message: `User ${data.email} registered`,
+        timestamp: Date.now(),
+      })
+    );
+  });
+
+  console.log("✅ Socket listeners registered");
 };
+
+// Notifications
+socket.off("notification");
+socket.on("notification", (data) => {
+  store.dispatch(
+    addNotification({
+      type: data.type || "INFO",
+      message: data.message,
+      timestamp: data.createdAt || Date.now(),
+    })
+  );
+});

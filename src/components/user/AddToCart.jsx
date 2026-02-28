@@ -1,39 +1,48 @@
-
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../../store/cartSlice";
+import { setCart } from "../../store/cartSlice";
+import { addToCart as addToCartService } from "../../services/user/cartService";
 import { ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-
-const AddToCart =({ product }) => {
-  //console.log("product")
-
+const AddToCart = ({ product }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userStatus = useSelector((state) => state.auth.status);
   const [loading, setLoading] = useState(false);
-  const userStatus = useSelector((state)=>state.auth.status)
-  const navigate=useNavigate()
 
-  const handleOnClick =  async () => {
-    if (userStatus ) {
+  const handleOnClick = async () => {
+    if (!userStatus) return navigate("/login");
+
+    try {
       setLoading(true);
-      dispatch(addToCart(product));
-      setTimeout(() => {
-        setLoading(false);
-      }, 500); // Simulate loading effect
-    }else {
-      navigate('/login')
+
+      const res = await addToCartService({
+        productId: product._id,
+        quantity: 1,
+      });
+      const normalizedItems = res.data.products.map((item) => ({
+      _id: item.product,
+      price: item.price,
+      quantity: item.quantity,
+    }));
+
+    dispatch(setCart(normalizedItems));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <button
       onClick={handleOnClick}
-      className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center hover:bg-blue-600 transition relative"
       disabled={loading}
+      className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center hover:bg-blue-600 transition"
     >
       {loading ? (
-        <span className="animate-spin border-t-2 border-white border-solid rounded-full w-4 h-4 mr-2"></span>
+        <span className="animate-spin border-t-2 border-white rounded-full w-4 h-4 mr-2" />
       ) : (
         <ShoppingCart size={20} className="mr-2" />
       )}

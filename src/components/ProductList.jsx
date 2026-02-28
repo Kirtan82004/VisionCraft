@@ -20,31 +20,32 @@ const ProductList = () => {
   const [page, setPage] = useState(1);
   const limit = 10;
   const { products, loading, error, page: currentPage, pages } = useSelector((state) => state.products);
-  console.log('Products from Redux:', products,currentPage,pages);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [brandFilter, setBrandFilter] = useState('all');
   const [priceFilter, setPriceFilter] = useState('all');
   const [filterOpen, setFilterOpen] = useState(false); // Mobile accordion toggle
   const brands = [...new Set(products.map(p => p.brand))];
+  const categories = Object.values(
+  products.reduce((acc, product) => {
+    if (product.category) {
+      acc[product.category._id] = product.category;
+    }
+    return acc;
+  }, {})
+);
 
   useEffect(() => {
     const fetchProducts = async () => {
       dispatch(fetchProductsStart());
       try {
-  
-          console.log('No products in state, fetching from API');
           const response = await getAllProducts(page, limit);
-          console.log('Fetched Products:', response.data);
           dispatch(fetchProductsSuccess(response.data));
           dispatch(setAllProducts(response.data));
-  
-
       } catch (err) {
         dispatch(fetchProductsFailure(err.message));
       }
     };
-
     fetchProducts();
   }, [dispatch, page]);
 
@@ -58,7 +59,7 @@ const ProductList = () => {
     }
 
     if (categoryFilter !== 'all') {
-      filtered = filtered.filter(p => p.category === categoryFilter);
+      filtered = filtered.filter(p => p.category.name=== categoryFilter);
     }
 
     if (brandFilter !== 'all') {
@@ -89,9 +90,19 @@ const ProductList = () => {
   const filtered = filterProducts();
 
   return (
-    <div className="container mx-auto px-4 py-8 mt-20">
+    <div className="max-w-7xl container mx-auto px-4 py-8 mt-20">
       {loading && <p className="text-center text-lg font-medium">Loading products...</p>}
       {error && <p className="text-center text-red-600 font-semibold">{error}</p>}
+       <section className="w-full bg-linear-to-br from-emerald-600 to-teal-600 text-white py-10 px-4 mb-10 rounded-3xl shadow-lg">
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="text-4xl sm:text-5xl font-bold mb-4">
+            Explore Our Collection of Premium Eyewear
+          </h1>
+          <p className="max-w-3xl mx-auto text-lg text-emerald-100">
+            Crafting eyewear that blends comfort, clarity, and confidence.
+          </p>
+        </div>
+      </section>
 
       {/* Mobile Filter Toggle Button */}
       <button
@@ -128,8 +139,8 @@ const ProductList = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
               >
                 <option value="all">All</option>
-                {Object.entries(categoryMap).map(([id, name]) => (
-                  <option key={id} value={id}>{name}</option>
+                {categories.map(c => (
+                  <option key={c._id} value={c.name}>{c.name}</option>
                 ))}
               </select>
             </div>
@@ -157,10 +168,10 @@ const ProductList = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
               >
                 <option value="all">All</option>
-                <option value="under-2000">Under $2000</option>
-                <option value="2000-5000">$2000 - $5000</option>
-                <option value="5000-10000">$5000 - $10000</option>
-                <option value="above-10000">Above $10,000</option>
+                <option value="under-2000">Under ₹2000</option>
+                <option value="2000-5000">₹2000 - ₹5000</option>
+                <option value="5000-10000">₹5000 - ₹10000</option>
+                <option value="above-10000">Above ₹10,000</option>
                 <option value="low-high">Sort: Low to High</option>
                 <option value="high-low">Sort: High to Low</option>
               </select>
@@ -171,7 +182,7 @@ const ProductList = () => {
         {/* Product Grid */}
         <section className="w-full lg:w-3/4">
           {filtered.length === 0 ? (
-            <p className="text-center text-gray-600 font-medium">No products match your filters.</p>
+            <p className="text-center text-gray-600 font-medium">No products found.</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {filtered.map((product) => (

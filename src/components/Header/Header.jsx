@@ -13,9 +13,6 @@ const Header = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
-  console.log("userStatus", userStatus);
-  console.log("adminStatus", adminStatus);
-
   // Navigation Items
   const navConfig = {
     guest: [

@@ -15,8 +15,8 @@ const OrderDetail = () => {
     const fetchOrderDetails = async () => {
       try {
         const response = await getOrderDetails(orderId)
-        if (!response?.data?.length) throw new Error("Order not found")
-        setOrder(response.data[0])
+        if (!response.success) throw new Error("Order not found")
+        setOrder(response.data)
       } catch (err) {
         setError(err.message)
       } finally {
@@ -69,7 +69,7 @@ const OrderDetail = () => {
           }
         />
         <Info label="Payment Method" value={order.paymentMethod} />
-        <Info label="Total Amount" value={`₹${order.orderTotal}`} />
+        <Info label="Total Amount" value={`₹${order.totalAmount}`} />
         <Info label="Order Date" value={new Date(order.createdAt).toLocaleDateString()} />
       </div>
 

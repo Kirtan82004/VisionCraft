@@ -12,8 +12,9 @@ import filterReducer from './filterSlice.js';
 import wishlistReducer from "./wishlistSlice.js"
 
 
-import adminOrderReducer from './admin/adminOrederManagmentSlice.js';
+import adminOrderReducer from './admin/adminOrederSlice.js';
 import customerReducer from "./admin/customerSlice.js"
+import adminProductReducer from "./admin/adminProductSlice.js"
 
 
 const store = configureStore({
@@ -29,7 +30,8 @@ const store = configureStore({
         savedItems: wishlistReducer,
         adminAuth: adminAuthReducer,
         adminOrder:adminOrderReducer,
-        customers:customerReducer
+        customers:customerReducer,
+        adminProduct:adminProductReducer
     }
 });
 

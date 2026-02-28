@@ -58,10 +58,10 @@ const values = [
 
 const AboutPage = () => {
   return (
-    <main className="bg-gray-50">
+    <main className="max-w-7xl mx-auto px-4 py-8 mt-16 sm:mt-20 space-y-8">
 
       {/* HERO SECTION */}
-      <section className="bg-linear-to-br from-emerald-600 to-teal-600 text-white py-20 px-4">
+      <section className="w-full bg-linear-to-br from-emerald-600 to-teal-600 text-white py-10 px-4 rounded-3xl shadow-lg">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl font-bold mb-4">
             {aboutInfo.title}

@@ -30,7 +30,6 @@ const AddProductReview = () => {
     dispatch(fetchReviewsStart());
     try {
       const response = await addProductReview(productId, { rating, comment })
-      console.log("response",response);
       dispatch(addReview(response));
       setComment("");
       setRating(0);

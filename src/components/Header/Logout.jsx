@@ -26,13 +26,16 @@ const LogoutBtn = () => {
         if(user){
             await logoutUser()
             localStorage.removeItem("auth")
+            localStorage.removeItem("accessToken")
             dispatch(userLogout())
             navigate('/')
             showAlert("success", "Logout successful!");
             
         }
         if(admin){
-            //await logoutAdmin()
+            await logoutUser()
+            localStorage.removeItem("auth")
+            localStorage.removeItem("accessToken")
             dispatch(adminLogout())
             navigate('/')
             showAlert("success", "Admin logout successful!");

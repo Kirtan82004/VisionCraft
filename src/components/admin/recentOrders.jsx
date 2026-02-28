@@ -1,28 +1,52 @@
-import { getRecentOrders } from "../../services/admin/oredrService";
-import { useEffect, useState } from "react";
+import { getOrders } from "../../services/admin/oredrService";
+import { useEffect, useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchAllOrdersStart,
+  fetchAllOrdersSuccess,
+  fetchAllOrdersFailure,
+} from "../../store/admin/adminOrederSlice";
 
 const RecentOrders = () => {
-  const [orders, setOrders] = useState([]);
+  const dispatch = useDispatch();
+
+  const { allOrders } = useSelector((state) => state.adminOrder);
+
+  // ✅ Only recent 10 orders from redux state
+  const recentOrders = useMemo(() => {
+    if (!allOrders || allOrders.length === 0) return [];
+    return [...allOrders]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .slice(0, 10);
+  }, [allOrders]);
 
   useEffect(() => {
-    const fetchRecentOrders = async () => {
-      try {
-        const data = await getRecentOrders();
-        console.log("Fetched Recent Orders:", data);
-        setOrders(data || []);
-        console.log("RecentOrdersData", data);
-      } catch (error) {
-        console.error("Recent Orders Error:", error);
-      }
-    };
-    fetchRecentOrders();
-  }, []);
+    // ✅ API call ONLY when redux state is empty
+    if (allOrders.length === 0) {
+      const fetchOrders = async () => {
+        try {
+          dispatch(fetchAllOrdersStart());
+          const data = await getOrders();
+          dispatch(
+          fetchAllOrdersSuccess({
+            orders: res.orders || [],
+            totalOrders: res.totalOrder || 0,
+          })
+        );
+        } catch (error) {
+          dispatch(fetchAllOrdersFailure(error.message));
+        }
+      };
+
+      fetchOrders();
+    }
+  }, [dispatch]);
 
   return (
     <div className="bg-white p-4 rounded-lg shadow w-full">
       <h3 className="text-lg font-semibold mb-4">Recent Orders</h3>
 
-      {/* 🔥 Mobile Scroll Wrapper */}
+      {/* 🔥 Mobile friendly scroll */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm min-w-[600px]">
           <thead>
@@ -34,26 +58,32 @@ const RecentOrders = () => {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
+            {recentOrders.map((order) => (
               <tr key={order._id} className="border-b">
-                <td className="py-2 wrap-break-word">{order.orderId}</td>
-                <td className="py-2">{order.customer.fullName}</td>
+                <td className="py-2 wrap-break-words">{order.orderId}</td>
+                <td className="py-2">{order.customer?.fullName}</td>
                 <td className="py-2">₹{order.totalPrice}</td>
                 <td className="py-2">
                   <span
-                    className={`px-2 py-1 rounded-full text-xs whitespace-nowrap
-                      ${
-                        order.orderStatus === "Pending"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-green-100 text-green-700"
-                      }
-                    `}
+                    className={`px-2 py-1 rounded-full text-xs whitespace-nowrap ${
+                      order.orderStatus === "Pending"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : "bg-green-100 text-green-700"
+                    }`}
                   >
                     {order.orderStatus}
                   </span>
                 </td>
               </tr>
             ))}
+
+            {recentOrders.length === 0 && (
+              <tr>
+                <td colSpan="4" className="text-center py-4 text-gray-400">
+                  No recent orders
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

@@ -4,7 +4,6 @@ import API from "../../utils/axiosInstance";
 const addProductReview = async (productId, reviewData) => {
     try {
         const res = await API.post(`users/addProductReview/${productId}`, reviewData);
-        console.log("res",res)
         return res.data;
     } catch (error) {
         return error.response.data;

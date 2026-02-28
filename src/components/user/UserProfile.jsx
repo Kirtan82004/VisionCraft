@@ -2,36 +2,23 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../../services/user/authService";
-import { removeFromSavedItems } from "../../store/wishlistSlice";
+import { removeFromSavedItems, setAllSavedItems} from "../../store/wishlistSlice";
 import {
   removeFromWishlist,
   getUserWishlist,
 } from "../../services/user/wishlistService";
 import { getOrderHistory } from "../../services/user/orderService";
+import {fetchOrdersStart,fetchOrdersSuccess,fetchOrdersFailure} from "../../store/orderSlice";
+
 
 const Profile = () => {
   const [user, setUser] = useState(null);
-  const [orders, setOrders] = useState([{
-    _id: "",
-    createdAt: "",
-    orderStatus: "",
-    orderTotal: ""
-
-  }]);
-  const [savedItems, setSavedItems] = useState([
-    {
-      _id: "",
-      name: "",
-      image: "",
-      price: ""
-    }
-  ]);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const authUser = useSelector((state) => state.auth.user);
   const userSavedItems = useSelector((state) => state.savedItems.items);
+  const savedOrders = useSelector((state) => state.orders.savedOrders);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   // Get user data
   useEffect(() => {
     if (authUser) {
@@ -47,24 +34,38 @@ const Profile = () => {
   useEffect(() => {
     const fetchWishlist = async () => {
       const res = await getUserWishlist();
-      console.log("Wishlist Response:", res);
-      setSavedItems(res.data);
+      dispatch(setAllSavedItems(res.data));
     };
+  
+    if(userSavedItems.length > 0){
+      console.log("Using wishlist from state:", userSavedItems);
+    }else{
     fetchWishlist();
-  }, [userSavedItems]);
+    }
+  }, [dispatch]);
 
   // Get order history
   useEffect(() => {
     const fetchOrderHistory = async () => {
+      dispatch(fetchOrdersStart());
       const res = await getOrderHistory();
+      console.log("Order history fetched from API:", res.data);
+      dispatch(fetchOrdersSuccess({orders: res.data, totalOrders: res.data.length}));
 
-      setOrders(res.orders);
     };
-    fetchOrderHistory();
+    if(savedOrders.length >0){
+      console.log("Using order history from state:", savedOrders);
+      return;
+    }else{
+      fetchOrderHistory();
+    }
+   
   }, []);
 
   const handleRemoveSavedItem = async (item) => {
-    await removeFromWishlist(item);
+    await removeFromWishlist(item._id);
+    dispatch(removeFromSavedItems(item._id));
+
   };
 
   if (!user) {
@@ -74,8 +75,6 @@ const Profile = () => {
       </p>
     );
   }
-  console.log(typeof orders)
-  console.log("orders", orders)
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 mt-16 sm:mt-20 space-y-8">
@@ -139,8 +138,8 @@ const Profile = () => {
             </thead>
 
             <tbody>
-              {orders.length > 0 ? (
-                orders.map((order) => (
+              {savedOrders.length > 0 ? (
+                savedOrders.map((order) => (
                   <tr
                     key={order._id}
                     className="border-b hover:bg-gray-50 transition"
@@ -162,7 +161,7 @@ const Profile = () => {
                       </span>
                     </td>
                     <td className="py-3 px-4 font-semibold">
-                      ₹{order.orderTotal}
+                      ₹{order.totalAmount}
                     </td>
                     <td
                       onClick={() => navigate(`/orderDetails/${order._id}`)}
@@ -191,14 +190,14 @@ const Profile = () => {
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {savedItems.length > 0 ? (
-            savedItems.map((item) => (
+          {userSavedItems.length > 0 ? (
+            userSavedItems.map((item) => (
               <div
                 key={item._id}
                 className="bg-white rounded-3xl shadow-md overflow-hidden hover:shadow-xl transition group"
               >
                 <img
-                  src={item.image || "https://placehold.co/600x400"}
+                  src={item.images?.[0] || "https://placehold.co/600x400"}
                   alt={item.name}
                   className="h-48 w-full object-cover group-hover:scale-105 transition duration-300"
                 />

@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  orders: [],
+  savedOrders: [],
+  totalOrders: 0, // total number of orders (for badges/UI)
   loading: false,
   error: null,
 };
@@ -10,30 +11,48 @@ const orderSlice = createSlice({
   name: 'orders',
   initialState,
   reducers: {
+    // ------------------ API Fetch ------------------
     fetchOrdersStart: (state) => {
       state.loading = true;
+      state.error = null;
     },
     fetchOrdersSuccess: (state, action) => {
       state.loading = false;
-      state.orders = action.payload;
+      state.savedOrders = action.payload.orders || [];
+      state.totalOrders = action.payload.totalOrders || state.orders.length;
     },
     fetchOrdersFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
+
+    // ------------------ User actions ------------------
     placeOrder: (state, action) => {
-      state.orders.push(action.payload);
+      state.savedOrders.push(action.payload);
+      state.totalOrders += 1;
     },
 
-    // ✅ Socket reducers
+    // ------------------ SOCKET REALTIME ------------------
     orderPlacedRealtime: (state, action) => {
-      state.orders.push(action.payload);
+      const exists = state.savedOrders.find(o => o._id === action.payload._id);
+      if (!exists) {
+        state.savedOrders.push(action.payload);
+        state.totalOrders += 1;
+      }
     },
     orderCancelledRealtime: (state, action) => {
-      const order = state.orders.find(o => o._id === action.payload.orderId);
+      const order = state.savedOrders.find(o => o._id === action.payload.orderId);
       if (order) {
-        order.status = action.payload.status;
+        order.orderStatus = action.payload.status;
       }
+    },
+
+    // Optional: clear orders on logout
+    clearOrders: (state) => {
+      state.savedOrders = [];
+      state.totalOrders = 0;
+      state.loading = false;
+      state.error = null;
     },
   },
 });
@@ -45,6 +64,7 @@ export const {
   placeOrder,
   orderPlacedRealtime,
   orderCancelledRealtime,
+  clearOrders,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

@@ -2,62 +2,62 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   cartItems: [],
+  totalItems: 0,
 };
 
 const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addToCart: (state, action) => {
-      const existingItem = state.cartItems.find(
-        (item) => item._id === action.payload._id
-      );
+    // ✅ SET CART FROM BACKEND RESPONSE
+    setCart: (state, action) => {
+      /*
+        Expected backend response structure:
+        {
+          _id: "...",
+          products: [
+            {
+              product: {...},
+              quantity: 2
+            }
+          ]
+        }
+      */
+      state.cartItems = action.payload
 
-      if (existingItem) {
-        existingItem.quantity += 1;
-      } else {
-        state.cartItems.push({ ...action.payload, quantity: 1 });
-      }
-    },
-    increaseQuantity: (state, action) => {
-      const item = state.cartItems.find((item) => item._id === action.payload);
-      if (item) {
-        item.quantity += 1;
-      }
-    },
-    decreaseQuantity: (state, action) => {
-      const item = state.cartItems.find((item) => item._id === action.payload);
-      if (item && item.quantity > 1) {
-        item.quantity -= 1;
-      } else {
-        state.cartItems = state.cartItems.filter(
-          (item) => item._id !== action.payload
-        );
-      }
-    },
-    removeFromCart: (state, action) => {
-      state.cartItems = state.cartItems.filter(
-        (item) => item._id !== action.payload
+      state.totalItems = state.cartItems.reduce(
+        (sum, item) => sum + item.quantity,
+        0
       );
     },
 
-    // ✅ Socket reducers
+    // ✅ REALTIME SOCKET UPDATE (optional)
     cartUpdatedRealtime: (state, action) => {
-      state.cartItems = action.payload.items;
+      const products = action.payload?.products || [];
+
+      state.cartItems = products.map((item) => ({
+        ...item.product,
+        quantity: item.quantity,
+      }));
+
+      state.totalItems = state.cartItems.reduce(
+        (sum, item) => sum + item.quantity,
+        0
+      );
     },
-    cartClearedRealtime: (state) => {
+
+    // ✅ CLEAR CART (logout / order placed)
+    clearCart: (state) => {
       state.cartItems = [];
+      state.totalItems = 0;
     },
   },
 });
 
 export const {
-  addToCart,
-  increaseQuantity,
-  decreaseQuantity,
-  removeFromCart,
+  setCart,
   cartUpdatedRealtime,
-  cartClearedRealtime,
+  clearCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

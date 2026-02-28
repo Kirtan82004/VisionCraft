@@ -57,6 +57,7 @@ const DashboardStats = () => {
     const fetchStats = async () => {
       try {
         const res = await getDashboardStats();
+        console.log("res in stats",res)
         setStats(res);
       } catch (error) {
         console.error("Dashboard Stats Error:", error);

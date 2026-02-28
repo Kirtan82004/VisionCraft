@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getProductById, updateProduct } from "../../../services/admin/productService";
+import {updateAdminProduct,fetchAdminProductById} from "../../../store/admin/adminProductSlice"
 
 const EditProduct = () => {
   const { id } = useParams();
@@ -11,7 +11,7 @@ const EditProduct = () => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const data = await getProductById(id);
+      const data =  fetchAdminProductById(id);
       setProduct(data);
       setLoading(false);
     };
@@ -24,7 +24,7 @@ const EditProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = await updateProduct(id, product);
+    const data = updateAdminProduct(id, product);
     console.log("UpdatedProductData", data);
     setProduct(data);
     navigate(`/admin/product/${id}`);

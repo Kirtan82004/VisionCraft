@@ -10,8 +10,10 @@ const reviewSlice = createSlice({
   name: 'reviews',
   initialState,
   reducers: {
+    // ------------------ Async Actions ------------------
     fetchReviewsStart: (state) => {
       state.loading = true;
+      state.error = null;
     },
     fetchReviewsSuccess: (state, action) => {
       state.loading = false;
@@ -21,24 +23,25 @@ const reviewSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+
+    // ------------------ Local Updates ------------------
     addReview: (state, action) => {
       state.reviews.push(action.payload);
+    },
+    editReview: (state, action) => {
+      state.reviews = state.reviews.map((review) =>
+        review._id === action.payload._id ? { ...review, ...action.payload } : review
+      );
     },
     removeReview: (state, action) => {
       state.reviews = state.reviews.filter((review) => review._id !== action.payload);
     },
-    editReview: (state, action) => {
-      state.reviews = state.reviews.map((review) =>
-        review._id === action.payload.id ? { ...review, ...action.payload } : review
-      );
-    },
-    getReviews: (state, action) => {
-      state.reviews = action.payload;
-    },
 
-    // ✅ Socket reducers
+    // ------------------ Socket Realtime ------------------
     reviewAddedRealtime: (state, action) => {
-      state.reviews.push(action.payload);
+      // Add review if it doesn't exist already
+      const exists = state.reviews.some(r => r._id === action.payload._id);
+      if (!exists) state.reviews.push(action.payload);
     },
     reviewUpdatedRealtime: (state, action) => {
       state.reviews = state.reviews.map((review) =>

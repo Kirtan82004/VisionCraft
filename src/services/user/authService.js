@@ -27,7 +27,7 @@ const loginUser = async (formData) => {
     try {
         const res = await axios.post(`${API_URL}/users/login`, formData);
         //window.alert("Login successful!");
-        console.log("Login Response:", res.data.data);
+        console.log("Login Response:", res);
         const accessToken = res.data.data.accessToken;
         const refreshToken = res.data.data.refreshToken;
         localStorage.setItem("accessToken", accessToken);
@@ -43,7 +43,6 @@ const loginUser = async (formData) => {
 
 // ✅ Logout user
 const logoutUser = async () => {
-    console.log("Logging out user...");
     try {
         const res = await axios.post(`${API_URL}/users/logout`, {}, {
             withCredentials: true,
@@ -51,8 +50,6 @@ const logoutUser = async () => {
         });
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
-        console.log("Logout Response:", res.data);
-        window.alert("User has been logged out.");
         return res.data;
     } catch (error) {
         console.error("Logout Error:", error);
@@ -73,8 +70,6 @@ const getCurrentUser = async () => {
         }
       }
     );
-
-    console.log("GetCurrentUser Response:", res.data);
     return res.data;
 
   } catch (error) {

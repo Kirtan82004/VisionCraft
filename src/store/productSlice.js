@@ -13,28 +13,31 @@ const productSlice = createSlice({
   name: 'products',
   initialState,
   reducers: {
+    // ------------------ API fetch ------------------
     fetchProductsStart: (state) => {
       state.loading = true;
       state.error = null;
     },
     fetchProductsSuccess: (state, action) => {
       state.loading = false;
-      // backend से आता है: { total, page, pages, data }
       state.products = action.payload.data;
       state.total = action.payload.total;
       state.page = action.payload.page;
       state.pages = action.payload.pages;
-      console.log('Products updated in state:', state.products);
     },
     fetchProductsFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
 
-    // ✅ Socket reducers
+    // ------------------ SOCKET REALTIME ------------------
     productAddedRealtime: (state, action) => {
-      state.products.push(action.payload);
-      state.total += 1;
+      const exists = state.products.find(p => p._id === action.payload._id);
+      if (!exists) {
+        // latest product top of the list
+        state.products.unshift(action.payload);
+        state.total += 1;
+      }
     },
     productUpdatedRealtime: (state, action) => {
       const index = state.products.findIndex(p => p._id === action.payload._id);
@@ -43,8 +46,21 @@ const productSlice = createSlice({
       }
     },
     productDeletedRealtime: (state, action) => {
+      const initialLength = state.products.length;
       state.products = state.products.filter(p => p._id !== action.payload.productId);
-      state.total -= 1;
+      if (state.products.length < initialLength) {
+        state.total -= 1;
+      }
+    },
+
+    // Optional: clear products on logout/navigation
+    clearProductsState: (state) => {
+      state.products = [];
+      state.total = 0;
+      state.page = 1;
+      state.pages = 1;
+      state.loading = false;
+      state.error = null;
     },
   },
 });
@@ -56,6 +72,7 @@ export const {
   productAddedRealtime,
   productUpdatedRealtime,
   productDeletedRealtime,
+  clearProductsState,
 } = productSlice.actions;
 
 export default productSlice.reducer;

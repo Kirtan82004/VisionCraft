@@ -1,9 +1,10 @@
 import { useState, useMemo, useCallback } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { createRazorpayOrder, placeOrder } from "../../services/user/orderService"
-import { removeFromCart } from "../../store/cartSlice"
+import { clearCart } from "../../store/cartSlice"
 import { fetchOrdersSuccess } from "../../store/orderSlice"
 import { useAlert } from "../../hooks/AlertProvider"
+import { useNavigate } from "react-router-dom"
 
 const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID
 
@@ -11,6 +12,7 @@ const Checkout = () => {
   const { showAlert } = useAlert()
   const { cartItems } = useSelector((state) => state.cart)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -94,15 +96,13 @@ const Checkout = () => {
 
             const orderResponse = await placeOrder(payload)
 
-            if (!orderResponse?.order)
+            if (orderResponse.success !== true)
               throw new Error("Order placement failed")
 
-            cartItems.forEach((item) =>
-              dispatch(removeFromCart(item._id))
-            )
-
+            dispatch(clearCart()); // ✅ backend cart already cleared
+            showAlert("success", "Order placed successfully 🎉");
             dispatch(fetchOrdersSuccess({ order: orderResponse.order }))
-            showAlert("success", "Order placed successfully 🎉")
+            navigate("/products")
           } catch (err) {
             showAlert("error", err.message || "Order failed")
           }

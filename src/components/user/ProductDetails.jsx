@@ -10,6 +10,10 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [review,setReview] = useState({
+    rating: 0,
+    comment: ""
+  })
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -62,7 +66,7 @@ const ProductDetail = () => {
   } = product || {};
 
   return (
-    <main className="container mx-auto px-4 py-10">
+    <main className="max-w-6xl mx-auto px-4 py-8 mt-16">
       {/* PRODUCT TOP */}
       <section className="grid md:grid-cols-2 gap-10 mb-16">
         {/* IMAGE */}

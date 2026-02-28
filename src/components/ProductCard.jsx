@@ -13,7 +13,6 @@ const ProductCard = ({ product }) => {
   const userStatus = useSelector((state) => state.auth.status);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log('Product in Card:', product);
 
   const handleWishlist = async () => {
   if (!userStatus) {
@@ -23,10 +22,7 @@ const ProductCard = ({ product }) => {
 
   try {
     if (!isWishlisted) {
-      console.log("Adding product to wishlist:", product);
       const response = await addToWishlist(product._id);
-      console.log("Add to Wishlist Response:", response);
-
       if (!response || !response.data) throw new Error("Invalid response");
       toast("💖 Added to your wishlist!", { icon: "✨" });
     } else {
@@ -34,6 +30,7 @@ const ProductCard = ({ product }) => {
       toast("❌ Removed from wishlist", { icon: "💔" });
     }
     setIsWishlisted(!isWishlisted);
+    dispatch(addToSavedItems(product));
   } catch (err) {
     toast.error("Failed to update wishlist");
     console.error("Wishlist Error:", err.message);
@@ -87,7 +84,7 @@ const ProductCard = ({ product }) => {
             <StarIcon
               key={index}
               className={`w-5 h-5 transition-colors duration-300 ${
-                index < product.ratings ? 'text-yellow-400' : 'text-gray-300'
+                index < product.averageRating ? 'text-yellow-400' : 'text-gray-300'
               }`}
             />
           ))}
